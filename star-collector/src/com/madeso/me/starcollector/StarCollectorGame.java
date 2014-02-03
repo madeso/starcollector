@@ -2,9 +2,11 @@ package com.madeso.me.starcollector;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -61,6 +63,9 @@ public class StarCollectorGame implements ApplicationListener {
 		starTexture.dispose();
 		playerTexture.dispose();
 	}
+	
+	private boolean touchdown = false;
+	private Vector3 touchpos = null;
 
 	@Override
 	public void render() {		
@@ -77,6 +82,66 @@ public class StarCollectorGame implements ApplicationListener {
 		batch.begin();
 		game.draw(batch, starSprite, playerSprite);
 		batch.end();
+		
+		float diff = 0.03f;
+		int segments = 50;
+		
+		if (Gdx.input.isTouched() )
+		{
+			if( touchdown == false)
+			{
+				touchdown = true;
+				touchpos = getTouchPosScreen();
+			}
+			
+			shapes.begin(ShapeType.Line);
+			shapes.setColor(0,0,1,0.20f);
+			Vector3 rtouchPos = new Vector3(touchpos);
+			shapes.circle(rtouchPos.x, rtouchPos.y, diff, segments);
+			
+			Vector3 newTouchPos = getTouchPosScreen();
+			Vector3 dist = newTouchPos.sub(touchpos);
+			dist.y = -dist.y;
+			float d = dist.len();
+			
+			if( d > diff )
+			{
+				shapes.setColor(0,1,0,0.5f);
+				shapes.circle(rtouchPos.x, rtouchPos.y, d, segments);
+			}
+			shapes.end();
+		}
+		else
+		{
+			if( touchdown )
+			{
+				touchdown = false;
+				Vector3 newTouchPos = getTouchPosScreen();
+				Vector3 dist = newTouchPos.sub(touchpos);
+				dist.y = -dist.y;
+				float d = dist.len();
+				
+				if( d > diff )
+				{
+					dist.nor();
+					float speed = 2;
+					Gdx.input.vibrate(100);
+					// player.setMove(dist.x*speed, dist.y*speed);
+				}
+				else
+				{
+					// player.setMove(0, 0);
+				}
+			}
+		}
+	}
+	
+	private Vector3 getTouchPosScreen()
+	{
+		Vector3 touchPos = new Vector3();
+		touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+		camera.unproject(touchPos);
+		return touchPos;
 	}
 
 	@Override
