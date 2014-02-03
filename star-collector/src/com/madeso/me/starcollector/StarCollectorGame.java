@@ -13,8 +13,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class StarCollectorGame implements ApplicationListener {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Texture texture;
-	private Sprite sprite;
+	
+	Texture starTexture;
+	Sprite starSprite;
+	
+	Texture playerTexture;
+	Sprite playerSprite;
 	
 	@Override
 	public void create() {		
@@ -24,31 +28,44 @@ public class StarCollectorGame implements ApplicationListener {
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
 		
-		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
+		starTexture = CreateTexture("data/star.png");
+		starSprite = new Sprite(new TextureRegion(starTexture));
+		starSprite.setSize(0.02f,  0.02f);
+		starSprite.setOrigin(starSprite.getWidth()/2, starSprite.getHeight()/2);
+		
+		playerTexture = CreateTexture("data/star.png");
+		playerSprite = new Sprite(new TextureRegion(playerTexture));
+		playerSprite.setSize(0.02f,  0.02f);
+		playerSprite.setOrigin(playerSprite.getWidth()/2, playerSprite.getHeight()/2);
+	}
+
+	private static Texture CreateTexture(String path) {
+		Texture texture = new Texture(Gdx.files.internal(path));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);
-		
-		sprite = new Sprite(region);
-		sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
+		return texture;
 	}
 
 	@Override
 	public void dispose() {
 		batch.dispose();
-		texture.dispose();
+		starTexture.dispose();
+		playerTexture.dispose();
 	}
 
 	@Override
 	public void render() {		
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		sprite.draw(batch);
+		
+		starSprite.setPosition(0.010f,  0.010f);
+		starSprite.draw(batch);
+		
+		starSprite.setPosition(0.05f, 0.05f);
+		starSprite.draw(batch);
+		
 		batch.end();
 	}
 
