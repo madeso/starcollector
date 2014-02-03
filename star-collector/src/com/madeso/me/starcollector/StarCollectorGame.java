@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class StarCollectorGame implements ApplicationListener {
 	private OrthographicCamera camera;
@@ -20,6 +22,10 @@ public class StarCollectorGame implements ApplicationListener {
 	Texture playerTexture;
 	Sprite playerSprite;
 	
+	Game game = new Game();
+	
+	ShapeRenderer shapes;
+	
 	@Override
 	public void create() {		
 		float w = Gdx.graphics.getWidth();
@@ -30,13 +36,17 @@ public class StarCollectorGame implements ApplicationListener {
 		
 		starTexture = CreateTexture("data/star.png");
 		starSprite = new Sprite(new TextureRegion(starTexture));
-		starSprite.setSize(0.02f,  0.02f);
+		starSprite.setSize(0.03f,  0.03f);
 		starSprite.setOrigin(starSprite.getWidth()/2, starSprite.getHeight()/2);
 		
-		playerTexture = CreateTexture("data/star.png");
+		playerTexture = CreateTexture("data/player.png");
 		playerSprite = new Sprite(new TextureRegion(playerTexture));
-		playerSprite.setSize(0.02f,  0.02f);
+		playerSprite.setSize(0.03f,  0.03f);
 		playerSprite.setOrigin(playerSprite.getWidth()/2, playerSprite.getHeight()/2);
+		
+		shapes = new ShapeRenderer();
+		
+		game.genworld();
 	}
 
 	private static Texture CreateTexture(String path) {
@@ -54,18 +64,18 @@ public class StarCollectorGame implements ApplicationListener {
 
 	@Override
 	public void render() {		
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
+		shapes.setProjectionMatrix(camera.combined);
+		
+		shapes.begin(ShapeType.Line);
+		game.draw_lines(shapes);
+		shapes.end();
+		
 		batch.begin();
-		
-		starSprite.setPosition(0.010f,  0.010f);
-		starSprite.draw(batch);
-		
-		starSprite.setPosition(0.05f, 0.05f);
-		starSprite.draw(batch);
-		
+		game.draw(batch, starSprite, playerSprite);
 		batch.end();
 	}
 
