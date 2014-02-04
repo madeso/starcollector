@@ -305,8 +305,8 @@ public class Game {
 
 		float step = 0.03f;
 
-		float startx = 0 - (step * width) / 2.0f;
-		float starty = 0 - (step * height) / 2.0f;
+		float startx = step - (step * width) / 2.0f;
+		float starty = step - (step * height) / 2.0f;
 
 		return new Vector2(startx + step * (x - 1), starty + step * (y - 1));
 	}
@@ -320,18 +320,18 @@ public class Game {
 	}
 
 	public void draw_lines(ShapeRenderer shapes) {
-		for (int x = 1; x <= width + 1; ++x) {
-			line(shapes, 0, 0, 0, x, 1, x, height + 1);
+		for (int x = 0; x < width + 1; ++x) {
+			line(shapes, 0, 0, 0, x, 0, x, height);
 		}
-		for (int y = 1; y <= height + 1; ++y) {
-			line(shapes, 0, 0, 0, 1, y, width + 1, y);
+		for (int y = 0; y < height + 1; ++y) {
+			line(shapes, 0, 0, 0, 0, y, width, y);
 		}
 	}
 
 	public void draw(SpriteBatch batch, Sprite star, Sprite player) {
-		for (int x = 1; x <= width; ++x) {
-			for (int y = 1; y <= height; ++y) {
-				if (world[x - 1][y - 1] != 0) {
+		for (int x = 0; x < width; ++x) {
+			for (int y = 0; y < height; ++y) {
+				if (world[x][y] != 0) {
 					Vector2 p2 = transform(x, y);
 					star.setPosition(p2.x, p2.y);
 					star.draw(batch);
