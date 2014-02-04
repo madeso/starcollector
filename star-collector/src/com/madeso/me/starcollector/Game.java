@@ -2,6 +2,7 @@ package com.madeso.me.starcollector;
 
 import java.util.*;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -26,6 +27,16 @@ public class Game {
 	String canplaytext = "";
 	int dx = 0;
 	int dy = 0;
+	
+	Sound sScore;
+	Sound sStep;
+	Sound sDie;
+	
+	public Game(Sound score, Sound step, Sound die) {
+		this.sScore = score;
+		this.sStep = step;
+		this.sDie = die;
+	}
 
 	public boolean isfree(int x, int y) {
 		if (playerx == x && playery == y) {
@@ -147,7 +158,7 @@ public class Game {
 	void gameover() {
 		canplay = false;
 		canplaytext = "Game over. Tap to restart.";
-		// playSound(sDie);
+		sDie.play();
 		System.out.println("FAIL!");
 	}
 
@@ -159,7 +170,7 @@ public class Game {
 	}
 
 	void score() {
-		// playSound(sScore)
+		sScore.play();
 		System.out.println("Score!");
 		itemsleft = itemsleft - 1;
 		if (itemsleft == 0) {
@@ -196,7 +207,7 @@ public class Game {
 			return false;
 		}
 
-		// playSound(sStep);
+		sStep.play();
 
 		return true;
 	}

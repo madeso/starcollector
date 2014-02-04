@@ -3,6 +3,8 @@ package com.madeso.me.starcollector;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,10 +29,14 @@ public class StarCollectorGame implements ApplicationListener {
 	Texture playerTexture;
 	Sprite playerSprite;
 
-	Game game = new Game();
+	Game game;
 
 	ShapeRenderer shapes;
 	private BitmapFont font;
+	private Sound sndScore;
+	private Sound sndStep;
+	private Sound sndDie;
+	private Music music;
 
 	@Override
 	public void create() {
@@ -55,8 +61,19 @@ public class StarCollectorGame implements ApplicationListener {
 
 		shapes = new ShapeRenderer();
 		
+		sndScore = Gdx.audio.newSound(Gdx.files.internal("data/score.wav"));
+		sndStep = Gdx.audio.newSound(Gdx.files.internal("data/step.wav"));
+		sndDie = Gdx.audio.newSound(Gdx.files.internal("data/die.wav"));
+		
+		music = Gdx.audio.newMusic(Gdx.files.internal("data/Malloga_Ballinga_Mastered_mp_0.mp3"));
+		
 		font = new BitmapFont(); // BitmapFont(Gdx.files.internal("Calibri.fnt"),Gdx.files.internal("Calibri.png"),false);
 		
+		music.setVolume(0.5f);
+		music.setLooping(true);
+		music.play();
+		
+		game = new Game(sndScore, sndStep, sndDie);
 		game.genworld();
 	}
 
@@ -73,6 +90,11 @@ public class StarCollectorGame implements ApplicationListener {
 		starTexture.dispose();
 		playerTexture.dispose();
 		font.dispose();
+		sndScore.dispose();
+		sndStep.dispose();
+		sndDie.dispose();
+		music.stop();
+		music.dispose();
 	}
 
 	private boolean touchdown = false;
