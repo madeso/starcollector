@@ -20,6 +20,12 @@ public class Game {
 	int playerx;
 	int playery;
 	
+	float timer = 0.0f;
+	boolean canplay = true;
+	String canplaytext = "";
+	int dx = 0;
+	int dy = 0;
+	
 	public boolean isfree(int x, int y) {
 		if (playerx ==x && playery == y) {
 			return false;
@@ -190,12 +196,6 @@ boolean step(int x, int y) {
 	return true;
 }
 
-float timer = 0.0f;
-boolean canplay = true;
-String canplaytext = "";
-int dx = 0;
-int dy = 0;
-
 void update(float dt) {
 	/*if showsolution then
 		solutiontimer = solutiontimer + dt
@@ -226,7 +226,7 @@ void update(float dt) {
 }
 
 enum Input {
-	left, right, up, down
+	left, right, up, down, tap
 }
 
 public void input(Input input) {
@@ -254,6 +254,11 @@ public void input(Input input) {
 				dy=1;
 			}
 		
+		}
+	}
+	else {
+		if( input == Input.tap ) {
+			genworld();
 		}
 	}
 }

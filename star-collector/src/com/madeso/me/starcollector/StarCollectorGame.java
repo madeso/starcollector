@@ -68,7 +68,9 @@ public class StarCollectorGame implements ApplicationListener {
 	private Vector3 touchpos = null;
 
 	@Override
-	public void render() {		
+	public void render() {
+		game.update(Gdx.graphics.getDeltaTime());
+		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
@@ -121,16 +123,31 @@ public class StarCollectorGame implements ApplicationListener {
 				dist.y = -dist.y;
 				float d = dist.len();
 				
-				if( d > diff )
-				{
-					dist.nor();
-					float speed = 2;
-					Gdx.input.vibrate(100);
-					// player.setMove(dist.x*speed, dist.y*speed);
+				dist = dist.scl(1.0f/diff);
+				
+				int dir = Maths.Classify(dist.x, dist.y);
+				
+				switch(dir) {
+				case 5:
+					game.input(Game.Input.tap);
+					break;
+				case 4:
+					game.input(Game.Input.left);
+					break;
+				case 6:
+					game.input(Game.Input.right);
+					break;
+				case 8:
+					game.input(Game.Input.up);
+					break;
+				case 2:
+					game.input(Game.Input.down);
+					break;
 				}
-				else
+				
+				if( d > 1.0f )
 				{
-					// player.setMove(0, 0);
+					Gdx.input.vibrate(100);
 				}
 			}
 		}
