@@ -3,6 +3,7 @@ package com.madeso.me.starcollector;
 import java.util.*;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -360,5 +361,13 @@ public class Game {
 		 * love.graphics.print("game & idea by sirGustav, sound by sfxr, music by "
 		 * , 0, love.graphics.getHeight() - 15)
 		 */
+	}
+	
+	public void draw_text(SpriteBatch batch, BitmapFont font) {
+		// font.draw(batch, "Helloworld", 4, 15);
+		
+		if ( canplay == false ) {
+			font.draw(batch, canplaytext, 4, 15);
+		}
 	}
 }

@@ -6,8 +6,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 public class StarCollectorGame implements ApplicationListener {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
+	private SpriteBatch fontbatch;
 
 	Texture starTexture;
 	Sprite starSprite;
@@ -27,6 +30,7 @@ public class StarCollectorGame implements ApplicationListener {
 	Game game = new Game();
 
 	ShapeRenderer shapes;
+	private BitmapFont font;
 
 	@Override
 	public void create() {
@@ -35,6 +39,7 @@ public class StarCollectorGame implements ApplicationListener {
 
 		camera = new OrthographicCamera(1, h / w);
 		batch = new SpriteBatch();
+		fontbatch = new SpriteBatch();
 
 		starTexture = CreateTexture("data/star.png");
 		starSprite = new Sprite(new TextureRegion(starTexture));
@@ -49,6 +54,10 @@ public class StarCollectorGame implements ApplicationListener {
 				playerSprite.getHeight() / 2);
 
 		shapes = new ShapeRenderer();
+		
+		font = new BitmapFont(); // BitmapFont(Gdx.files.internal("Calibri.fnt"),Gdx.files.internal("Calibri.png"),false);
+		
+		System.out.println( font.getLineHeight() );
 
 		game.genworld();
 	}
@@ -62,6 +71,7 @@ public class StarCollectorGame implements ApplicationListener {
 	@Override
 	public void dispose() {
 		batch.dispose();
+		fontbatch.dispose();
 		starTexture.dispose();
 		playerTexture.dispose();
 	}
@@ -75,9 +85,13 @@ public class StarCollectorGame implements ApplicationListener {
 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
+		fontbatch.setProjectionMatrix(normalProjection);
 
 		batch.setProjectionMatrix(camera.combined);
 		shapes.setProjectionMatrix(camera.combined);
+		// fontbatch.setProjectionMatrix(camera.combined);
 
 		shapes.begin(ShapeType.Line);
 		game.draw_lines(shapes);
@@ -86,6 +100,11 @@ public class StarCollectorGame implements ApplicationListener {
 		batch.begin();
 		game.draw(batch, starSprite, playerSprite);
 		batch.end();
+		
+		fontbatch.begin();
+		font.setColor(0, 0, 0, 1.0f);
+		game.draw_text(fontbatch, font);
+		fontbatch.end();
 
 		float diff = 0.03f;
 		int segments = 50;
