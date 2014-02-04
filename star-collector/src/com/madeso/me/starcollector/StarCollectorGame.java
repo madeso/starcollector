@@ -57,8 +57,6 @@ public class StarCollectorGame implements ApplicationListener {
 		
 		font = new BitmapFont(); // BitmapFont(Gdx.files.internal("Calibri.fnt"),Gdx.files.internal("Calibri.png"),false);
 		
-		System.out.println( font.getLineHeight() );
-
 		game.genworld();
 	}
 
@@ -74,6 +72,7 @@ public class StarCollectorGame implements ApplicationListener {
 		fontbatch.dispose();
 		starTexture.dispose();
 		playerTexture.dispose();
+		font.dispose();
 	}
 
 	private boolean touchdown = false;
