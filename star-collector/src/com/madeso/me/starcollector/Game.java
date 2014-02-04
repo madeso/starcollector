@@ -135,6 +135,128 @@ public class Game {
 	private int math_random(int size) {
 		return rand.nextInt(size);
 	}
+	
+	void gameover() {
+		canplay = false;
+		canplaytext = "Game over. Tap to restart.";
+		// playSound(sDie);
+	}
+
+	void win() {
+		canplay = false;
+		canplaytext = "Level completed. Tap to restart";
+		// playSound(sDie);
+	}
+	
+	void score() {
+		// playSound(sScore)
+		itemsleft = itemsleft -1;
+		if( itemsleft == 0 ) {
+			win();
+		}
+	}
+
+boolean step(int x, int y) {
+	playerx = playerx+x;
+	playery = playery+y;
+	
+	if( playerx <= 0 )  {
+		gameover();
+		return false;
+	}
+	if( playery <= 0 ) {
+		gameover();
+		return false;
+	}
+	
+	if(playerx > width) {
+		gameover();
+		return false;
+	}
+	
+	if(playery > height) {
+		gameover();
+		return false;
+	}
+	
+	if(world[playerx][playery] !=0) {
+		world[playerx][playery] = 0;
+		score();
+		return false;
+	}
+	
+	//playSound(sStep);
+	
+	return true;
+}
+
+float timer = 0.0f;
+boolean canplay = true;
+String canplaytext = "";
+int dx = 0;
+int dy = 0;
+
+void update(float dt) {
+	/*if showsolution then
+		solutiontimer = solutiontimer + dt
+		if solutiontimer > kSolutionTime then
+			solutiontimer = solutiontimer - kSolutionTime
+			if solutionindex == #solution then
+				solutionindex = 1
+			else
+				solutionindex = solutionindex +1
+			end
+		end
+	end*/
+	if(canplay) {
+		if(dx!=0 || dy!=0) {
+			if(timer <= 0) {
+				if (step(dx,dy)) {
+					timer += 0.1;
+				} else {
+					dx = 0;
+					dy = 0;
+					timer = 0;
+				}
+		} else {
+				timer = timer - dt;
+		}
+	}
+}
+}
+
+enum Input {
+	left, right, up, down
+}
+
+public void input(Input input) {
+	if(canplay) {
+		if(dx!=0 || dy!=0) {
+		}
+		else {
+			if( input == Input.right) {
+				dx=1;
+				dy=0;
+			}
+			
+			if( input == Input.left) {
+				dx=-1;
+				dy=0;
+			}
+			
+			if( input == Input.up) {
+				dx=0;
+				dy=-1;
+			}
+			
+			if( input == Input.down) {
+				dx=0;
+				dy=1;
+			}
+		
+		}
+	}
+}
 
 	boolean dogenworld() {
 		world = new int[width][height];
@@ -143,17 +265,17 @@ public class Game {
 		
 		playerx = math_random(width);
 		playery = math_random(height);
-		// canplay = true;
-		// canplaytext = "";
+		canplay = true;
+		canplaytext = "";
 		
 		// solutionindex = 1;
 		// solutiontimer = 0;
 		
 		itemsleft = 0;
 		
-		// timer = 0
-		//dx = 0
-		//dy = 0
+		timer = 0;
+		dx = 0;
+		dy = 0;
 		
 		for(int x=0; x<width; ++x) {
 			for(int y=0; y<height; ++y) {
