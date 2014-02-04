@@ -147,16 +147,19 @@ public class Game {
 		canplay = false;
 		canplaytext = "Game over. Tap to restart.";
 		// playSound(sDie);
+		System.out.println("FAIL!");
 	}
 
 	void win() {
 		canplay = false;
 		canplaytext = "Level completed. Tap to restart";
 		// playSound(sDie);
+		System.out.println("WIN!");
 	}
 
 	void score() {
 		// playSound(sScore)
+		System.out.println("Score!");
 		itemsleft = itemsleft - 1;
 		if (itemsleft == 0) {
 			win();
@@ -167,21 +170,21 @@ public class Game {
 		playerx = playerx + x;
 		playery = playery + y;
 
-		if (playerx <= 0) {
+		if (playerx < 0) {
 			gameover();
 			return false;
 		}
-		if (playery <= 0) {
-			gameover();
-			return false;
-		}
-
-		if (playerx > width) {
+		if (playery < 0) {
 			gameover();
 			return false;
 		}
 
-		if (playery > height) {
+		if (playerx >= width) {
+			gameover();
+			return false;
+		}
+
+		if (playery >= height) {
 			gameover();
 			return false;
 		}
