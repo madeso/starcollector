@@ -17,37 +17,39 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 public class StarCollectorGame implements ApplicationListener {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	
+
 	Texture starTexture;
 	Sprite starSprite;
-	
+
 	Texture playerTexture;
 	Sprite playerSprite;
-	
+
 	Game game = new Game();
-	
+
 	ShapeRenderer shapes;
-	
+
 	@Override
-	public void create() {		
+	public void create() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		
-		camera = new OrthographicCamera(1, h/w);
+
+		camera = new OrthographicCamera(1, h / w);
 		batch = new SpriteBatch();
-		
+
 		starTexture = CreateTexture("data/star.png");
 		starSprite = new Sprite(new TextureRegion(starTexture));
-		starSprite.setSize(0.03f,  0.03f);
-		starSprite.setOrigin(starSprite.getWidth()/2, starSprite.getHeight()/2);
-		
+		starSprite.setSize(0.03f, 0.03f);
+		starSprite.setOrigin(starSprite.getWidth() / 2,
+				starSprite.getHeight() / 2);
+
 		playerTexture = CreateTexture("data/player.png");
 		playerSprite = new Sprite(new TextureRegion(playerTexture));
-		playerSprite.setSize(0.03f,  0.03f);
-		playerSprite.setOrigin(playerSprite.getWidth()/2, playerSprite.getHeight()/2);
-		
+		playerSprite.setSize(0.03f, 0.03f);
+		playerSprite.setOrigin(playerSprite.getWidth() / 2,
+				playerSprite.getHeight() / 2);
+
 		shapes = new ShapeRenderer();
-		
+
 		game.genworld();
 	}
 
@@ -63,71 +65,65 @@ public class StarCollectorGame implements ApplicationListener {
 		starTexture.dispose();
 		playerTexture.dispose();
 	}
-	
+
 	private boolean touchdown = false;
 	private Vector3 touchpos = null;
 
 	@Override
 	public void render() {
 		game.update(Gdx.graphics.getDeltaTime());
-		
+
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
+
 		batch.setProjectionMatrix(camera.combined);
 		shapes.setProjectionMatrix(camera.combined);
-		
+
 		shapes.begin(ShapeType.Line);
 		game.draw_lines(shapes);
 		shapes.end();
-		
+
 		batch.begin();
 		game.draw(batch, starSprite, playerSprite);
 		batch.end();
-		
+
 		float diff = 0.03f;
 		int segments = 50;
-		
-		if (Gdx.input.isTouched() )
-		{
-			if( touchdown == false)
-			{
+
+		if (Gdx.input.isTouched()) {
+			if (touchdown == false) {
 				touchdown = true;
 				touchpos = getTouchPosScreen();
 			}
-			
+
 			shapes.begin(ShapeType.Line);
-			shapes.setColor(0,0,1,0.20f);
+			shapes.setColor(0, 0, 1, 0.20f);
 			Vector3 rtouchPos = new Vector3(touchpos);
 			shapes.circle(rtouchPos.x, rtouchPos.y, diff, segments);
-			
+
 			Vector3 newTouchPos = getTouchPosScreen();
 			Vector3 dist = newTouchPos.sub(touchpos);
 			dist.y = -dist.y;
 			float d = dist.len();
-			
-			if( d > diff )
-			{
-				shapes.setColor(0,1,0,0.5f);
+
+			if (d > diff) {
+				shapes.setColor(0, 1, 0, 0.5f);
 				shapes.circle(rtouchPos.x, rtouchPos.y, d, segments);
 			}
 			shapes.end();
-		}
-		else
-		{
-			if( touchdown )
-			{
+		} else {
+			if (touchdown) {
 				touchdown = false;
 				Vector3 newTouchPos = getTouchPosScreen();
 				Vector3 dist = newTouchPos.sub(touchpos);
 				dist.y = -dist.y;
 				float d = dist.len();
-				
-				dist = dist.scl(1.0f/diff);
-				
+
+				dist = dist.scl(1.0f / diff);
+
 				int dir = Maths.Classify(dist.x, dist.y);
-				
-				switch(dir) {
+
+				switch (dir) {
 				case 5:
 					game.input(Game.Input.tap);
 					break;
@@ -144,17 +140,15 @@ public class StarCollectorGame implements ApplicationListener {
 					game.input(Game.Input.down);
 					break;
 				}
-				
-				if( d > 1.0f )
-				{
+
+				if (d > 1.0f) {
 					Gdx.input.vibrate(100);
 				}
 			}
 		}
 	}
-	
-	private Vector3 getTouchPosScreen()
-	{
+
+	private Vector3 getTouchPosScreen() {
 		Vector3 touchPos = new Vector3();
 		touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		camera.unproject(touchPos);
