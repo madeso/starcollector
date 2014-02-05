@@ -2,6 +2,7 @@ package com.madeso.me.starcollector;
 
 import java.util.*;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -160,13 +161,15 @@ public class Game {
 		canplaytext = "Game over. Tap to restart.";
 		sDie.play();
 		System.out.println("FAIL!");
+		Gdx.input.cancelVibrate();
+		Gdx.input.vibrate(500);
 	}
 
 	void win() {
 		canplay = false;
 		canplaytext = "Level completed. Tap to restart";
 		// playSound(sDie);
-		System.out.println("WIN!");
+		System.out.println("WIN!");		
 	}
 
 	void score() {
@@ -175,6 +178,12 @@ public class Game {
 		itemsleft = itemsleft - 1;
 		if (itemsleft == 0) {
 			win();
+			Gdx.input.cancelVibrate();
+			Gdx.input.vibrate(500);
+		}
+		else {
+			Gdx.input.cancelVibrate();
+			Gdx.input.vibrate(100);
 		}
 	}
 
@@ -208,6 +217,9 @@ public class Game {
 		}
 
 		sStep.play();
+		
+		// Gdx.input.cancelVibrate();
+		// Gdx.input.vibrate(10);
 
 		return true;
 	}
@@ -307,6 +319,8 @@ public class Game {
 			complete = dogenworld();
 		} while (complete == false);
 	}
+	
+	public static final float SIZE = 0.025f;
 
 	Vector2 transform(int x, int y) {
 		// float rw = Gdx.graphics.getWidth();
@@ -315,7 +329,7 @@ public class Game {
 		// float w = 2.0f;
 		// float h = 2*(rh/rw);
 
-		float step = 0.03f;
+		float step = SIZE;
 
 		float startx = step - (step * width) / 2.0f;
 		float starty = step - (step * height) / 2.0f;

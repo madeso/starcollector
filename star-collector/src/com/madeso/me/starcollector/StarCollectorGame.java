@@ -55,7 +55,7 @@ public class StarCollectorGame implements ApplicationListener {
 
 		playerTexture = CreateTexture("data/player.png");
 		playerSprite = new Sprite(new TextureRegion(playerTexture));
-		playerSprite.setSize(0.03f, 0.03f);
+		playerSprite.setSize(Game.SIZE, Game.SIZE);
 		playerSprite.setOrigin(playerSprite.getWidth() / 2,
 				playerSprite.getHeight() / 2);
 
@@ -182,7 +182,6 @@ public class StarCollectorGame implements ApplicationListener {
 				}
 
 				if (d > 1.0f) {
-					Gdx.input.vibrate(100);
 				}
 			}
 		}
