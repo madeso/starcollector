@@ -179,10 +179,10 @@ public class Game {
 		if (itemsleft == 0) {
 			win();
 			Gdx.input.cancelVibrate();
-			// Gdx.input.vibrate(500);
+			Gdx.input.vibrate(500);
 			// star wars!
-			long[] pattern = {0, 500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500};
-			Gdx.input.vibrate(pattern, -1); 
+			// long[] pattern = {0, 500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500};
+			// Gdx.input.vibrate(pattern, -1); 
 		}
 		else {
 			Gdx.input.cancelVibrate();
