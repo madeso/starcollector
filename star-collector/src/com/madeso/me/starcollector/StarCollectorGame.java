@@ -47,17 +47,9 @@ public class StarCollectorGame implements ApplicationListener {
 		batch = new SpriteBatch();
 		fontbatch = new SpriteBatch();
 
-		starTexture = CreateTexture("data/star.png");
-		starSprite = new Sprite(new TextureRegion(starTexture));
-		starSprite.setSize(0.03f, 0.03f);
-		starSprite.setOrigin(starSprite.getWidth() / 2,
-				starSprite.getHeight() / 2);
-
-		playerTexture = CreateTexture("data/player.png");
-		playerSprite = new Sprite(new TextureRegion(playerTexture));
-		playerSprite.setSize(Game.SIZE, Game.SIZE);
-		playerSprite.setOrigin(playerSprite.getWidth() / 2,
-				playerSprite.getHeight() / 2);
+		;
+		starSprite = createSprite(starTexture = CreateTexture("data/star.png"), Game.SIZE);
+		playerSprite = createSprite(playerTexture = CreateTexture("data/player.png"), Game.SIZE);
 
 		shapes = new ShapeRenderer();
 		
@@ -75,6 +67,14 @@ public class StarCollectorGame implements ApplicationListener {
 		
 		game = new Game(sndScore, sndStep, sndDie);
 		game.genworld();
+	}
+
+	private static Sprite createSprite(Texture playerTexture, float size) {
+		Sprite playerSprite = new Sprite(new TextureRegion(playerTexture));
+		playerSprite.setSize(size, size);
+		playerSprite.setOrigin(playerSprite.getWidth() / 2,
+				playerSprite.getHeight() / 2);
+		return playerSprite;
 	}
 
 	private static Texture CreateTexture(String path) {
