@@ -286,6 +286,14 @@ public class Game {
 			}
 		}
 	}
+	
+	boolean isAlive() {
+		return canplay;
+	}
+	
+	boolean isStopped() {
+		return dx == 0 && dy==0;
+	}
 
 	boolean dogenworld() {
 		world = new int[width][height];

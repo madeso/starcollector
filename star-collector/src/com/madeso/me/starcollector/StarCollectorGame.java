@@ -158,8 +158,7 @@ public class StarCollectorGame implements ApplicationListener {
 		game.draw_text(fontbatch, font);
 		fontbatch.end();
 
-		float diff = 0.03f;
-		// int segments = 50;
+		float diff = 0.04f;
 
 		if (Gdx.input.isTouched(0)) {
 			if (touchdown == false) {
@@ -167,48 +166,42 @@ public class StarCollectorGame implements ApplicationListener {
 				touchpos = getTouchPosScreen();
 			}
 
-			// shapes.begin(ShapeType.Line);
-			// shapes.setColor(0, 0, 1, 0.20f);
 			Vector3 rtouchPos = new Vector3(touchpos);
-			// shapes.circle(rtouchPos.x, rtouchPos.y, diff, segments);
 
 			Vector3 newTouchPos = getTouchPosScreen();
 			Vector3 dist = newTouchPos.sub(touchpos);
 			dist.y = -dist.y;
-			// float d = dist.len();
 			
 			dist = dist.scl(1.0f / diff);
 
 			int dir = Maths.Classify(dist.x, dist.y);
 			
-			Sprite icon = notSprite;
-			switch(dir) {
-			case 5:
-				icon = allSprite;
-				break;
-			case 4:
-				icon = leftSprite;
-				break;
-			case 8:
-				icon = downSprite;
-				break;
-			case 6:
-				icon = rightSprite;
-				break;
-			case 2:
-				icon = upSprite;
-				break;
+			if( game.isAlive() ) {
+				Sprite icon = notSprite;
+				if( game.isStopped() ) {
+					switch(dir) {
+					case 5:
+						icon = allSprite;
+						break;
+					case 4:
+						icon = leftSprite;
+						break;
+					case 8:
+						icon = downSprite;
+						break;
+					case 6:
+						icon = rightSprite;
+						break;
+					case 2:
+						icon = upSprite;
+						break;
+					}
+				}
+				icon.setPosition(rtouchPos.x - icon.getWidth()/2, rtouchPos.y - icon.getHeight()/2);
+				batch.begin();
+				icon.draw(batch);
+				batch.end();
 			}
-			icon.setPosition(rtouchPos.x - icon.getWidth()/2, rtouchPos.y - icon.getHeight()/2);
-			batch.begin();
-			icon.draw(batch);
-			batch.end();
-
-			/*if (d > diff) {
-				shapes.setColor(0, 1, 0, 0.5f);
-				shapes.circle(rtouchPos.x, rtouchPos.y, d, segments);
-			}
-			shapes.end();*/
 		} else {
 			if (touchdown) {
 				touchdown = false;
