@@ -25,7 +25,6 @@ public class StarCollectorGame implements ApplicationListener {
 
 	Texture starTexture;
 	Texture playerTexture;
-	
 	Texture allTexture;
 	Texture leftTexture;
 	Texture upTexture;
@@ -33,15 +32,18 @@ public class StarCollectorGame implements ApplicationListener {
 	Texture downTexture;
 	Texture notTexture;
 	
+	Texture worldGrassTexture;
+	
 	Sprite starSprite;
 	Sprite playerSprite;
-	
 	Sprite allSprite;
 	Sprite leftSprite;
 	Sprite upSprite;
 	Sprite rightSprite;
 	Sprite downSprite;
 	Sprite notSprite;
+	
+	Sprite worldGrassSprite;
 
 	Game game;
 
@@ -65,7 +67,7 @@ public class StarCollectorGame implements ApplicationListener {
 
 		;
 		starSprite = createSprite(starTexture = CreateTexture("data/star.png"), Game.SIZE);
-		playerSprite = createSprite(playerTexture = CreateTexture("data/player.png"), Game.SIZE);
+		playerSprite = createSprite(playerTexture = CreateTexture("player/1.png"), Game.SIZE * 2);
 		
 		allSprite = createSprite(allTexture = CreateTexture("input/all.png"), BUTTONSIZE*2);
 		leftSprite = createSprite(leftTexture = CreateTexture("input/left.png"), BUTTONSIZE);
@@ -73,6 +75,8 @@ public class StarCollectorGame implements ApplicationListener {
 		rightSprite = createSprite(rightTexture = CreateTexture("input/right.png"), BUTTONSIZE);
 		downSprite = createSprite(downTexture = CreateTexture("input/down.png"), BUTTONSIZE);
 		notSprite = createSprite(notTexture = CreateTexture("input/not.png"), BUTTONSIZE);
+		
+		worldGrassSprite = createSprite(worldGrassTexture = CreateTexture("world/grassMid.png"), Game.SIZE*2);
 
 		shapes = new ShapeRenderer();
 		
@@ -120,6 +124,8 @@ public class StarCollectorGame implements ApplicationListener {
 		downTexture.dispose();
 		notTexture.dispose();
 		
+		worldGrassTexture.dispose();
+		
 		font.dispose();
 		sndScore.dispose();
 		sndStep.dispose();
@@ -146,12 +152,12 @@ public class StarCollectorGame implements ApplicationListener {
 		// fontbatch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		game.draw(batch, starSprite, playerSprite);
+		game.draw(batch, worldGrassSprite, starSprite, playerSprite);
 		batch.end();
 		
-		shapes.begin(ShapeType.Line);
+		/*shapes.begin(ShapeType.Line);
 		game.draw_lines(shapes);
-		shapes.end();
+		shapes.end();*/
 		
 		fontbatch.begin();
 		font.setColor(0, 0, 0, 1.0f);

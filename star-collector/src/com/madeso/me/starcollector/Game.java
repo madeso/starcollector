@@ -365,11 +365,15 @@ public class Game {
 		}
 	}
 
-	public void draw(SpriteBatch batch, Sprite star, Sprite player) {
-		for (int y = 0; y < height; ++y) {
+	public void draw(SpriteBatch batch, Sprite world, Sprite star, Sprite player) {
+		drawPlayer(batch, player, height);
+		for (int y = height-1; y >= 0; --y) {
+			drawWorld(batch, world, y);
 			drawStars(batch, star, y);
 			drawPlayer(batch, player, y);
 		}
+		drawPlayer(batch, player, -1);
+		
 
 		/*
 		 * if(showsolution) { for(Iterator<Vec2i> ii = solution.iterator(); ii
@@ -397,6 +401,14 @@ public class Game {
 				star.setPosition(p2.x, p2.y);
 				star.draw(batch);
 			}
+		}
+	}
+	
+	private void drawWorld(SpriteBatch batch, Sprite sprite, int y) {
+		for (int x = 0; x < width; ++x) {
+			Vector2 p2 = transform(x, y);
+			sprite.setPosition(p2.x, p2.y - SIZE * (8.0f/16.0f));
+			sprite.draw(batch);
 		}
 	}
 
