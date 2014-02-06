@@ -366,19 +366,10 @@ public class Game {
 	}
 
 	public void draw(SpriteBatch batch, Sprite star, Sprite player) {
-		for (int x = 0; x < width; ++x) {
-			for (int y = 0; y < height; ++y) {
-				if (world[x][y] != 0) {
-					Vector2 p2 = transform(x, y);
-					star.setPosition(p2.x, p2.y);
-					star.draw(batch);
-				}
-			}
+		for (int y = 0; y < height; ++y) {
+			drawStars(batch, star, y);
+			drawPlayer(batch, player, y);
 		}
-
-		Vector2 p = transform(playerx, playery);
-		player.setPosition(p.x, p.y);
-		player.draw(batch);
 
 		/*
 		 * if(showsolution) { for(Iterator<Vec2i> ii = solution.iterator(); ii
@@ -397,6 +388,24 @@ public class Game {
 		 * love.graphics.print("game & idea by sirGustav, sound by sfxr, music by "
 		 * , 0, love.graphics.getHeight() - 15)
 		 */
+	}
+
+	private void drawStars(SpriteBatch batch, Sprite star, int y) {
+		for (int x = 0; x < width; ++x) {			
+			if (world[x][y] != 0) {
+				Vector2 p2 = transform(x, y);
+				star.setPosition(p2.x, p2.y);
+				star.draw(batch);
+			}
+		}
+	}
+
+	private void drawPlayer(SpriteBatch batch, Sprite player, int y) {
+		if( y == playery ) {
+			Vector2 p = transform(playerx, playery);
+			player.setPosition(p.x, p.y);
+			player.draw(batch);
+		}
 	}
 	
 	public void draw_text(SpriteBatch batch, BitmapFont font) {
