@@ -145,13 +145,13 @@ public class StarCollectorGame implements ApplicationListener {
 		shapes.setProjectionMatrix(camera.combined);
 		// fontbatch.setProjectionMatrix(camera.combined);
 
-		shapes.begin(ShapeType.Line);
-		game.draw_lines(shapes);
-		shapes.end();
-
 		batch.begin();
 		game.draw(batch, starSprite, playerSprite);
 		batch.end();
+		
+		shapes.begin(ShapeType.Line);
+		game.draw_lines(shapes);
+		shapes.end();
 		
 		fontbatch.begin();
 		font.setColor(0, 0, 0, 1.0f);
