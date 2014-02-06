@@ -24,10 +24,24 @@ public class StarCollectorGame implements ApplicationListener {
 	private SpriteBatch fontbatch;
 
 	Texture starTexture;
-	Sprite starSprite;
-
 	Texture playerTexture;
+	
+	Texture allTexture;
+	Texture leftTexture;
+	Texture upTexture;
+	Texture rightTexture;
+	Texture downTexture;
+	Texture notTexture;
+	
+	Sprite starSprite;
 	Sprite playerSprite;
+	
+	Sprite allSprite;
+	Sprite leftSprite;
+	Sprite upSprite;
+	Sprite rightSprite;
+	Sprite downSprite;
+	Sprite notSprite;
 
 	Game game;
 
@@ -37,6 +51,8 @@ public class StarCollectorGame implements ApplicationListener {
 	private Sound sndStep;
 	private Sound sndDie;
 	private Music music;
+	
+	private final float BUTTONSIZE = 0.1f;
 
 	@Override
 	public void create() {
@@ -50,6 +66,13 @@ public class StarCollectorGame implements ApplicationListener {
 		;
 		starSprite = createSprite(starTexture = CreateTexture("data/star.png"), Game.SIZE);
 		playerSprite = createSprite(playerTexture = CreateTexture("data/player.png"), Game.SIZE);
+		
+		allSprite = createSprite(allTexture = CreateTexture("input/all.png"), BUTTONSIZE*2);
+		leftSprite = createSprite(leftTexture = CreateTexture("input/left.png"), BUTTONSIZE);
+		upSprite = createSprite(upTexture = CreateTexture("input/up.png"), BUTTONSIZE);
+		rightSprite = createSprite(rightTexture = CreateTexture("input/right.png"), BUTTONSIZE);
+		downSprite = createSprite(downTexture = CreateTexture("input/down.png"), BUTTONSIZE);
+		notSprite = createSprite(notTexture = CreateTexture("input/not.png"), BUTTONSIZE);
 
 		shapes = new ShapeRenderer();
 		
@@ -69,12 +92,12 @@ public class StarCollectorGame implements ApplicationListener {
 		game.genworld();
 	}
 
-	private static Sprite createSprite(Texture playerTexture, float size) {
-		Sprite playerSprite = new Sprite(new TextureRegion(playerTexture));
-		playerSprite.setSize(size, size);
-		playerSprite.setOrigin(playerSprite.getWidth() / 2,
-				playerSprite.getHeight() / 2);
-		return playerSprite;
+	private static Sprite createSprite(Texture texture, float size) {
+		Sprite sprite = new Sprite(new TextureRegion(texture));
+		sprite.setSize(size, size);
+		sprite.setOrigin(sprite.getWidth() / 2,
+				sprite.getHeight() / 2);
+		return sprite;
 	}
 
 	private static Texture CreateTexture(String path) {
@@ -89,6 +112,14 @@ public class StarCollectorGame implements ApplicationListener {
 		fontbatch.dispose();
 		starTexture.dispose();
 		playerTexture.dispose();
+		
+		allTexture.dispose();
+		leftTexture.dispose();
+		upTexture.dispose();
+		rightTexture.dispose();
+		downTexture.dispose();
+		notTexture.dispose();
+		
 		font.dispose();
 		sndScore.dispose();
 		sndStep.dispose();
@@ -128,7 +159,7 @@ public class StarCollectorGame implements ApplicationListener {
 		fontbatch.end();
 
 		float diff = 0.03f;
-		int segments = 50;
+		// int segments = 50;
 
 		if (Gdx.input.isTouched(0)) {
 			if (touchdown == false) {
@@ -136,21 +167,48 @@ public class StarCollectorGame implements ApplicationListener {
 				touchpos = getTouchPosScreen();
 			}
 
-			shapes.begin(ShapeType.Line);
-			shapes.setColor(0, 0, 1, 0.20f);
+			// shapes.begin(ShapeType.Line);
+			// shapes.setColor(0, 0, 1, 0.20f);
 			Vector3 rtouchPos = new Vector3(touchpos);
-			shapes.circle(rtouchPos.x, rtouchPos.y, diff, segments);
+			// shapes.circle(rtouchPos.x, rtouchPos.y, diff, segments);
 
 			Vector3 newTouchPos = getTouchPosScreen();
 			Vector3 dist = newTouchPos.sub(touchpos);
 			dist.y = -dist.y;
-			float d = dist.len();
+			// float d = dist.len();
+			
+			dist = dist.scl(1.0f / diff);
 
-			if (d > diff) {
+			int dir = Maths.Classify(dist.x, dist.y);
+			
+			Sprite icon = notSprite;
+			switch(dir) {
+			case 5:
+				icon = allSprite;
+				break;
+			case 4:
+				icon = leftSprite;
+				break;
+			case 8:
+				icon = downSprite;
+				break;
+			case 6:
+				icon = rightSprite;
+				break;
+			case 2:
+				icon = upSprite;
+				break;
+			}
+			icon.setPosition(rtouchPos.x - icon.getWidth()/2, rtouchPos.y - icon.getHeight()/2);
+			batch.begin();
+			icon.draw(batch);
+			batch.end();
+
+			/*if (d > diff) {
 				shapes.setColor(0, 1, 0, 0.5f);
 				shapes.circle(rtouchPos.x, rtouchPos.y, d, segments);
 			}
-			shapes.end();
+			shapes.end();*/
 		} else {
 			if (touchdown) {
 				touchdown = false;
