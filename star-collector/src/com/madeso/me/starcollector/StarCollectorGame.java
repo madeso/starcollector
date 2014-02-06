@@ -24,7 +24,7 @@ public class StarCollectorGame implements ApplicationListener {
 	private SpriteBatch fontbatch;
 
 	Texture starTexture;
-	Texture playerTexture;
+	Texture[] playerTexture;
 	Texture allTexture;
 	Texture leftTexture;
 	Texture upTexture;
@@ -32,10 +32,12 @@ public class StarCollectorGame implements ApplicationListener {
 	Texture downTexture;
 	Texture notTexture;
 	
-	Texture worldGrassTexture;
+	Texture worldTexture;
+	
+	public static final int PLAYERCOUNT = 5;
 	
 	Sprite starSprite;
-	Sprite playerSprite;
+	Sprite[] playerSprite;
 	Sprite allSprite;
 	Sprite leftSprite;
 	Sprite upSprite;
@@ -43,7 +45,7 @@ public class StarCollectorGame implements ApplicationListener {
 	Sprite downSprite;
 	Sprite notSprite;
 	
-	Sprite worldGrassSprite;
+	Sprite worldSprite;
 
 	Game game;
 
@@ -64,10 +66,14 @@ public class StarCollectorGame implements ApplicationListener {
 		camera = new OrthographicCamera(1, h / w);
 		batch = new SpriteBatch();
 		fontbatch = new SpriteBatch();
-
-		;
+		
 		starSprite = createSprite(starTexture = CreateTexture("data/star.png"), Game.SIZE);
-		playerSprite = createSprite(playerTexture = CreateTexture("player/1.png"), Game.SIZE * 2);
+		
+		playerSprite = new Sprite[PLAYERCOUNT];
+		playerTexture = new Texture[PLAYERCOUNT];
+		for(int p=0; p<PLAYERCOUNT; ++p) {
+			playerSprite[p] = createSprite(playerTexture[p] = CreateTexture("player/" + Integer.toString(p+1) + ".png"), Game.SIZE * 2);
+		}
 		
 		allSprite = createSprite(allTexture = CreateTexture("input/all.png"), BUTTONSIZE*2);
 		leftSprite = createSprite(leftTexture = CreateTexture("input/left.png"), BUTTONSIZE);
@@ -76,7 +82,7 @@ public class StarCollectorGame implements ApplicationListener {
 		downSprite = createSprite(downTexture = CreateTexture("input/down.png"), BUTTONSIZE);
 		notSprite = createSprite(notTexture = CreateTexture("input/not.png"), BUTTONSIZE);
 		
-		worldGrassSprite = createSprite(worldGrassTexture = CreateTexture("world/grassMid.png"), Game.SIZE*2);
+		worldSprite = createSprite(worldTexture = CreateTexture("world/grassMid.png"), Game.SIZE*2);
 
 		shapes = new ShapeRenderer();
 		
@@ -115,7 +121,9 @@ public class StarCollectorGame implements ApplicationListener {
 		batch.dispose();
 		fontbatch.dispose();
 		starTexture.dispose();
-		playerTexture.dispose();
+		for(int p=0; p<PLAYERCOUNT; ++p) {
+			playerTexture[p].dispose();
+		}
 		
 		allTexture.dispose();
 		leftTexture.dispose();
@@ -124,7 +132,7 @@ public class StarCollectorGame implements ApplicationListener {
 		downTexture.dispose();
 		notTexture.dispose();
 		
-		worldGrassTexture.dispose();
+		worldTexture.dispose();
 		
 		font.dispose();
 		sndScore.dispose();
@@ -152,7 +160,7 @@ public class StarCollectorGame implements ApplicationListener {
 		// fontbatch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		game.draw(batch, worldGrassSprite, starSprite, playerSprite);
+		game.draw(batch, worldSprite, starSprite, playerSprite);
 		batch.end();
 		
 		/*shapes.begin(ShapeType.Line);

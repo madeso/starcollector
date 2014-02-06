@@ -151,6 +151,7 @@ public class Game {
 	}
 
 	Random rand = new Random();
+	private int playerIndex;
 
 	private int math_random(int size) {
 		return rand.nextInt(size);
@@ -304,6 +305,7 @@ public class Game {
 		playery = math_random(height);
 		canplay = true;
 		canplaytext = "";
+		playerIndex = math_random(StarCollectorGame.PLAYERCOUNT);
 
 		// solutionindex = 1;
 		// solutiontimer = 0;
@@ -365,7 +367,7 @@ public class Game {
 		}
 	}
 
-	public void draw(SpriteBatch batch, Sprite world, Sprite star, Sprite player) {
+	public void draw(SpriteBatch batch, Sprite world, Sprite star, Sprite[] player) {
 		drawPlayer(batch, player, height);
 		for (int y = height-1; y >= 0; --y) {
 			drawWorld(batch, world, y);
@@ -412,11 +414,11 @@ public class Game {
 		}
 	}
 
-	private void drawPlayer(SpriteBatch batch, Sprite player, int y) {
+	private void drawPlayer(SpriteBatch batch, Sprite[] player, int y) {
 		if( y == playery ) {
 			Vector2 p = transform(playerx, playery);
-			player.setPosition(p.x, p.y);
-			player.draw(batch);
+			player[playerIndex].setPosition(p.x, p.y);
+			player[playerIndex].draw(batch);
 		}
 	}
 	
