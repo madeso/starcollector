@@ -32,9 +32,10 @@ public class StarCollectorGame implements ApplicationListener {
 	Texture downTexture;
 	Texture notTexture;
 	
-	Texture worldTexture;
+	Texture[] worldTexture;
 	
 	public static final int PLAYERCOUNT = 5;
+	public static final int WORLDCOUNT = 10;
 	
 	Sprite starSprite;
 	Sprite[] playerSprite;
@@ -45,7 +46,7 @@ public class StarCollectorGame implements ApplicationListener {
 	Sprite downSprite;
 	Sprite notSprite;
 	
-	Sprite worldSprite;
+	Sprite[] worldSprite;
 
 	Game game;
 
@@ -82,7 +83,11 @@ public class StarCollectorGame implements ApplicationListener {
 		downSprite = createSprite(downTexture = CreateTexture("input/down.png"), BUTTONSIZE);
 		notSprite = createSprite(notTexture = CreateTexture("input/not.png"), BUTTONSIZE);
 		
-		worldSprite = createSprite(worldTexture = CreateTexture("world/grassMid.png"), Game.SIZE*2);
+		worldSprite = new Sprite[WORLDCOUNT];
+		worldTexture = new Texture[WORLDCOUNT];
+		for(int w1=0; w1<WORLDCOUNT; ++w1) {
+			worldSprite[w1] = createSprite(worldTexture[w1] = CreateTexture("world/" +Integer.toString(w1+1)+ "-mid.png"), Game.SIZE*2);
+		}
 
 		shapes = new ShapeRenderer();
 		
@@ -132,7 +137,9 @@ public class StarCollectorGame implements ApplicationListener {
 		downTexture.dispose();
 		notTexture.dispose();
 		
-		worldTexture.dispose();
+		for(int w1=0; w1<WORLDCOUNT; ++w1) {
+			worldTexture[w1].dispose();
+		}
 		
 		font.dispose();
 		sndScore.dispose();
