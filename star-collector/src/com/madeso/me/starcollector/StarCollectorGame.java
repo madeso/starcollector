@@ -156,7 +156,7 @@ public class StarCollectorGame implements ApplicationListener {
 	public void render() {
 		game.update(Gdx.graphics.getDeltaTime());
 
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(94/255.0f, 129/255.0f, 162/255.0f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
