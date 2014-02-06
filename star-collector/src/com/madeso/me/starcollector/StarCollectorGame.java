@@ -130,7 +130,7 @@ public class StarCollectorGame implements ApplicationListener {
 		float diff = 0.03f;
 		int segments = 50;
 
-		if (Gdx.input.isTouched()) {
+		if (Gdx.input.isTouched(0)) {
 			if (touchdown == false) {
 				touchdown = true;
 				touchpos = getTouchPosScreen();
@@ -189,7 +189,7 @@ public class StarCollectorGame implements ApplicationListener {
 
 	private Vector3 getTouchPosScreen() {
 		Vector3 touchPos = new Vector3();
-		touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+		touchPos.set(Gdx.input.getX(0), Gdx.input.getY(0), 0);
 		camera.unproject(touchPos);
 		return touchPos;
 	}
