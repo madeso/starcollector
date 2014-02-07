@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -33,6 +34,7 @@ public class StarCollectorGame implements ApplicationListener {
 	Texture notTexture;
 	
 	Texture[] worldTexture;
+	Texture backgroundsTexture;
 	
 	public static final int PLAYERCOUNT = 5;
 	public static final int WORLDCOUNT = 10;
@@ -47,6 +49,7 @@ public class StarCollectorGame implements ApplicationListener {
 	Sprite notSprite;
 	
 	Sprite[] worldSprite;
+	Sprite backgroundsSprite;
 
 	Game game;
 
@@ -82,6 +85,12 @@ public class StarCollectorGame implements ApplicationListener {
 		rightSprite = createSprite(rightTexture = CreateTexture("input/right.png"), BUTTONSIZE);
 		downSprite = createSprite(downTexture = CreateTexture("input/down.png"), BUTTONSIZE);
 		notSprite = createSprite(notTexture = CreateTexture("input/not.png"), BUTTONSIZE);
+		
+		backgroundsTexture = CreateTexture("data/backgrounds.png");
+		backgroundsTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		backgroundsSprite = new Sprite(backgroundsTexture);
+		backgroundsSprite.setSize(w, h);
+		backgroundsSprite.setPosition(0.0f, 0.0f);
 		
 		worldSprite = new Sprite[WORLDCOUNT];
 		worldTexture = new Texture[WORLDCOUNT];
@@ -136,6 +145,7 @@ public class StarCollectorGame implements ApplicationListener {
 		rightTexture.dispose();
 		downTexture.dispose();
 		notTexture.dispose();
+		backgroundsTexture.dispose();
 		
 		for(int w1=0; w1<WORLDCOUNT; ++w1) {
 			worldTexture[w1].dispose();
@@ -166,6 +176,10 @@ public class StarCollectorGame implements ApplicationListener {
 		shapes.setProjectionMatrix(camera.combined);
 		// fontbatch.setProjectionMatrix(camera.combined);
 
+		fontbatch.begin();
+		game.drawBackground(fontbatch, backgroundsSprite);
+		fontbatch.end();
+		
 		batch.begin();
 		game.draw(batch, worldSprite, starSprite, playerSprite);
 		batch.end();

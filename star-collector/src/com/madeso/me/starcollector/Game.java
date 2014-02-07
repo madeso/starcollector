@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Game {
 
+	private static final float SCROLLSPEED = 0.02f;
+	
 	private int width = 20;
 	private int height = 20;
 	private int items = 10;
@@ -153,6 +155,7 @@ public class Game {
 	Random rand = new Random();
 	private int playerIndex;
 	private int worldIndex;
+	private int backgroundIndex;
 
 	private int math_random(int size) {
 		return rand.nextInt(size);
@@ -230,6 +233,10 @@ public class Game {
 	}
 
 	void update(float dt) {
+		backgroundTimer += dt * SCROLLSPEED;
+		while(backgroundTimer > 1.0f)  { 
+			backgroundTimer -= 1.0f;
+		}
 		/*
 		 * if showsolution then solutiontimer = solutiontimer + dt if
 		 * solutiontimer > kSolutionTime then solutiontimer = solutiontimer -
@@ -296,6 +303,8 @@ public class Game {
 	boolean isStopped() {
 		return dx == 0 && dy==0;
 	}
+	
+	private float backgroundTimer = 0.0f;
 
 	boolean dogenworld() {
 		world = new int[width][height];
@@ -308,6 +317,7 @@ public class Game {
 		canplaytext = "";
 		playerIndex = math_random(StarCollectorGame.PLAYERCOUNT);
 		worldIndex = math_random(StarCollectorGame.WORLDCOUNT);
+		backgroundIndex = math_random(3);
 
 		// solutionindex = 1;
 		// solutiontimer = 0;
@@ -367,6 +377,16 @@ public class Game {
 		for (int y = 0; y < height + 1; ++y) {
 			line(shapes, 0, 0, 0, 0, y, width, y);
 		}
+	}
+	
+	public void drawBackground(SpriteBatch batch, Sprite background) {
+		background.setU(backgroundTimer);
+		background.setU2(backgroundTimer+1);
+		
+		final float HEIGHT = 1/3.0f;
+		background.setV( backgroundIndex*HEIGHT );
+		background.setV2((backgroundIndex+1)*HEIGHT);
+		background.draw(batch);
 	}
 
 	public void draw(SpriteBatch batch, Sprite[] world, Sprite star, Sprite[] player) {
