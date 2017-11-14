@@ -107,12 +107,12 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         do {
             if (generate) {
                 positions = listValidPositions(x, y)
-                // print("generated valid positions");
+                // generated valid positions
                 generate = false
             }
 
             if (positions.size == 0) {
-                // print("no more valid positions, failing...")
+                // no more valid positions, failing...
                 return false
             }
 
@@ -134,10 +134,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
                 }
 
                 generate = true
-                // print "placing item"
-            } else {
-                // print("invalid suggestion, retrying", #positions)
-                // table.remove(positions, randomindex)
             }
         } while (done == false)
 
@@ -163,7 +159,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     internal fun win() {
         isAlive = false
         canplaytext = "Level completed. Tap to restart"
-        // playSound(sDie);
         println("WIN!")
     }
 
@@ -175,9 +170,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
             win()
             Gdx.input.cancelVibrate()
             Gdx.input.vibrate(500)
-            // star wars!
-            // long[] pattern = {0, 500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500};
-            // Gdx.input.vibrate(pattern, -1);
         } else {
             Gdx.input.cancelVibrate()
             Gdx.input.vibrate(100)
@@ -215,9 +207,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
 
         sStep.play()
 
-        // Gdx.input.cancelVibrate();
-        // Gdx.input.vibrate(10);
-
         return true
     }
 
@@ -226,12 +215,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         while (backgroundTimer > 1.0f) {
             backgroundTimer -= 1.0f
         }
-        /*
-		 * if showsolution then solutiontimer = solutiontimer + dt if
-		 * solutiontimer > kSolutionTime then solutiontimer = solutiontimer -
-		 * kSolutionTime if solutionindex == #solution then solutionindex = 1
-		 * else solutionindex = solutionindex +1 end end end
-		 */
+
         if (isAlive) {
             if (dx != 0 || dy != 0) {
                 if (timer <= 0) {
@@ -301,9 +285,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         worldIndex = math_random(worldcount)
         backgroundIndex = math_random(3)
 
-        // solutionindex = 1;
-        // solutiontimer = 0;
-
         itemsleft = 0
 
         timer = 0f
@@ -328,12 +309,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     }
 
     internal fun transform(x: Int, y: Int): Vector2 {
-        // float rw = Gdx.graphics.getWidth();
-        // float rh = Gdx.graphics.getHeight();
-
-        // float w = 2.0f;
-        // float h = 2*(rh/rw);
-
         val step = size
 
         val startx = step - step * width / 2.0f
@@ -359,26 +334,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
             drawStars(batch, star, y)
             drawPlayer(batch, player, y)
         }
-        drawPlayer(batch, player, -1)
-
-
-        /*
-		 * if(showsolution) { for(Iterator<Vec2i> ii = solution.iterator(); ii
-		 * != null;) { Vec2i n = ii.next(); int i = n.x; int j = n.y;
-		 * if(solutionindex == i ) { love.graphics.setColor(255,0,0, 255) } else
-		 * { love.graphics.setColor(0,0,255, 50) } local a,b =
-		 * transform(v.x,v.y) love.graphics.rectangle("fill", a, b, 16,16) } }
-		 */
-
-        /*
-		 * love.graphics.setColor(255,255,255) if canplay == false then
-		 * love.graphics.print(canplaytext, 20, 10) end
-		 *
-		 * love.graphics.setColor(255,255,255, 255) comment this this introduce
-		 * a delay/sleep in rendering
-		 * love.graphics.print("game & idea by sirGustav, sound by sfxr, music by "
-		 * , 0, love.graphics.getHeight() - 15)
-		 */
+        drawPlayer(batch, player,-1)
     }
 
     private fun drawStars(batch: SpriteBatch, star: Sprite, y: Int) {
@@ -408,8 +364,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     }
 
     fun draw_text(batch: SpriteBatch, font: BitmapFont) {
-        // font.draw(batch, "Helloworld", 4, 15);
-
         if (isAlive == false) {
             font.draw(batch, canplaytext, 4f, 15f)
         }
