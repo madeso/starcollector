@@ -18,25 +18,49 @@ class Disposer
         return sprite
     }
 
+    val textures = mutableListOf<Texture>()
     fun CreateTexture(path: String): Texture
     {
         val texture = Texture(Gdx.files.internal(path))
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear)
+        textures.add(texture)
         return texture
     }
 
+    val sounds = mutableListOf<Sound>()
     fun CreateSound(path: String) : Sound
     {
-        return Gdx.audio.newSound(Gdx.files.internal(path))
+        val sound = Gdx.audio.newSound(Gdx.files.internal(path))
+        sounds.add(sound)
+        return sound
     }
 
+    val musics = mutableListOf<Music>()
     fun CreateMusic(path: String) : Music
     {
-        return Gdx.audio.newMusic(Gdx.files.internal(path))
+        val music = Gdx.audio.newMusic(Gdx.files.internal(path))
+        musics.add(music)
+        return music
     }
 
     fun DisposeAll()
     {
-        // todo: implement me
+        for(texture in textures)
+        {
+            texture.dispose()
+        }
+        textures.clear()
+
+        for(sound in sounds)
+        {
+            sound.dispose()
+        }
+        sounds.clear()
+
+        for(music in musics)
+        {
+            music.dispose()
+        }
+        musics.clear()
     }
 }
