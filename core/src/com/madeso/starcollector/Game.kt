@@ -27,15 +27,20 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     internal var dx = 0
     internal var dy = 0
 
+    internal var rand = Random()
+    private var playerIndex: Int = 0
+    private var worldIndex: Int = 0
+    private var backgroundIndex: Int = 0
+
+    internal lateinit var solution: MutableList<Vec2i>
+    private var world: Array<IntArray>? = null
+    private var mem: Array<BooleanArray>? = null
+
     fun isfree(x: Int, y: Int): Boolean {
         return if (playerx == x && playery == y) {
             false
         } else mem!![x][y] == false
     }
-
-    internal lateinit var solution: MutableList<Vec2i>
-    private var world: Array<IntArray>? = null
-    private var mem: Array<BooleanArray>? = null
 
     internal fun remember(sx: Int, sy: Int, nx: Int, ny: Int) {
         var x = sx
@@ -140,11 +145,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
 
         return true
     }
-
-    internal var rand = Random()
-    private var playerIndex: Int = 0
-    private var worldIndex: Int = 0
-    private var backgroundIndex: Int = 0
 
     private fun math_random(size: Int): Int {
         return rand.nextInt(size)
@@ -417,9 +417,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     }
 
     companion object {
-
         private val SCROLLSPEED = 0.02f
-
         val SIZE = 0.025f
     }
 }
