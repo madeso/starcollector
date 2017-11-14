@@ -48,8 +48,6 @@ class StarCollector(disposer: Disposer)
         disposer.CreateSprite(disposer.CreateTexture("world/" + Integer.toString(it + 1) + "-mid.png"), SIZE * 2)
     }
 
-    val shapes = ShapeRenderer()
-
     val sndScore = disposer.CreateSound("data/score.wav")
     val sndStep = disposer.CreateSound("data/step.wav")
     val sndDie = disposer.CreateSound("data/die.wav")
@@ -116,7 +114,6 @@ class StarCollector(disposer: Disposer)
         fontbatch.projectionMatrix = normalProjection
 
         batch.projectionMatrix = camera.combined
-        shapes.projectionMatrix = camera.combined
 
         fontbatch.begin()
         game.drawBackground(fontbatch, backgroundsSprite)
