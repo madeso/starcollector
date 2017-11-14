@@ -17,8 +17,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     private val height = 20
     private val items = 10
 
-    internal val kSolutionTime = 0.05f
-
     internal var itemsleft = 0
     internal var playerx: Int = 0
     internal var playery: Int = 0
@@ -343,23 +341,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         val starty = step - step * height / 2.0f
 
         return Vector2(startx + step * (x - 1), starty + step * (y - 1))
-    }
-
-    internal fun line(shapes: ShapeRenderer, cr: Int, cg: Int, cb: Int, a: Int, b: Int,
-                      x: Int, y: Int) {
-        val from = transform(a, b)
-        val to = transform(x, y)
-        shapes.color = Color(0.0f, 0.0f, 0.0f, 255.0f)
-        shapes.line(from.x, from.y, to.x, to.y)
-    }
-
-    fun draw_lines(shapes: ShapeRenderer) {
-        for (x in 0..width + 1 - 1) {
-            line(shapes, 0, 0, 0, x, 0, x, height)
-        }
-        for (y in 0..height + 1 - 1) {
-            line(shapes, 0, 0, 0, 0, y, width, y)
-        }
     }
 
     fun drawBackground(batch: SpriteBatch, background: Sprite) {
