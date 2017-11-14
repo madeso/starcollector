@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.Color
 import java.util.*
 
 
-class Game(internal var sScore: Sound, internal var sStep: Sound, internal var sDie: Sound, val playercount : Int, val worldcount: Int) {
+class Game(internal var sScore: Sound, internal var sStep: Sound, internal var sDie: Sound, val playercount : Int, val worldcount: Int, val scrollspeed : Float, val size: Float) {
 
     private val width = 20
     private val height = 20
@@ -221,7 +221,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     }
 
     internal fun update(dt: Float) {
-        backgroundTimer += dt * SCROLLSPEED
+        backgroundTimer += dt * scrollspeed
         while (backgroundTimer > 1.0f) {
             backgroundTimer -= 1.0f
         }
@@ -335,7 +335,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         // float w = 2.0f;
         // float h = 2*(rh/rw);
 
-        val step = SIZE
+        val step = size
 
         val startx = step - step * width / 2.0f
         val starty = step - step * height / 2.0f
@@ -395,7 +395,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     private fun drawWorld(batch: SpriteBatch, sprite: Array<Sprite>, y: Int) {
         for (x in 0..width - 1) {
             val p2 = transform(x, y)
-            sprite[worldIndex].setPosition(p2.x, p2.y - SIZE * (8.0f / 16.0f))
+            sprite[worldIndex].setPosition(p2.x, p2.y - size * (8.0f / 16.0f))
             sprite[worldIndex].draw(batch)
         }
     }
@@ -414,10 +414,5 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         if (isAlive == false) {
             font.draw(batch, canplaytext, 4f, 15f)
         }
-    }
-
-    companion object {
-        private val SCROLLSPEED = 0.02f
-        val SIZE = 0.025f
     }
 }

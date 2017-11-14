@@ -23,12 +23,14 @@ class StarCollector(disposer: Disposer)
     val BUTTONSIZE = 0.1f
     val PLAYERCOUNT = 5
     val WORLDCOUNT = 10
+    val SCROLLSPEED = 0.02f
+    val SIZE = 0.025f
 
-    val starSprite = disposer.CreateSprite(disposer.CreateTexture("data/star.png"), Game.SIZE)
+    val starSprite = disposer.CreateSprite(disposer.CreateTexture("data/star.png"), SIZE)
 
     val playerSprite = Array(PLAYERCOUNT)
     {
-        disposer.CreateSprite(disposer.CreateTexture("player/" + Integer.toString(it + 1) + ".png"), Game.SIZE * 2)
+        disposer.CreateSprite(disposer.CreateTexture("player/" + Integer.toString(it + 1) + ".png"), SIZE * 2)
     }
 
     val allSprite = disposer.CreateSprite(disposer.CreateTexture("input/all.png"), BUTTONSIZE * 2)
@@ -43,7 +45,7 @@ class StarCollector(disposer: Disposer)
 
     val worldSprite = Array(WORLDCOUNT)
     {
-        disposer.CreateSprite(disposer.CreateTexture("world/" + Integer.toString(it + 1) + "-mid.png"), Game.SIZE * 2)
+        disposer.CreateSprite(disposer.CreateTexture("world/" + Integer.toString(it + 1) + "-mid.png"), SIZE * 2)
     }
 
     val shapes = ShapeRenderer()
@@ -56,7 +58,7 @@ class StarCollector(disposer: Disposer)
 
     val font = BitmapFont() // BitmapFont(Gdx.files.internal("Calibri.fnt"),Gdx.files.internal("Calibri.png"),false);
 
-    val game = Game(sndScore, sndStep, sndDie, PLAYERCOUNT, WORLDCOUNT)
+    val game = Game(sndScore, sndStep, sndDie, PLAYERCOUNT, WORLDCOUNT, SCROLLSPEED, SIZE)
 
     init {
         backgroundsTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
