@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.Color
 import java.util.*
 
 
-class Game(internal var sScore: Sound, internal var sStep: Sound, internal var sDie: Sound) {
+class Game(internal var sScore: Sound, internal var sStep: Sound, internal var sDie: Sound, val playercount : Int, val worldcount: Int) {
 
     private val width = 20
     private val height = 20
@@ -298,8 +298,8 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         playery = math_random(height)
         isAlive = true
         canplaytext = ""
-        playerIndex = math_random(StarCollectorGame.PLAYERCOUNT)
-        worldIndex = math_random(StarCollectorGame.WORLDCOUNT)
+        playerIndex = math_random(playercount)
+        worldIndex = math_random(worldcount)
         backgroundIndex = math_random(3)
 
         // solutionindex = 1;
