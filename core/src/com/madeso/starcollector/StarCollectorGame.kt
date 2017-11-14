@@ -19,7 +19,9 @@ class StarCollectorGame : ApplicationListener {
         game.render()
     }
 
-    override fun resize(width: Int, height: Int) {}
+    override fun resize(width: Int, height: Int) {
+        game.OnSize()
+    }
 
     override fun pause() {}
 

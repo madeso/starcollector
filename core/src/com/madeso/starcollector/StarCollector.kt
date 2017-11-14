@@ -13,10 +13,8 @@ import com.badlogic.gdx.math.Vector3
 
 class StarCollector(disposer: Disposer)
 {
-    val w = Gdx.graphics.width.toFloat()
-    val h = Gdx.graphics.height.toFloat()
+    var camera = OrthographicCamera(1f, 1f)
 
-    val camera = OrthographicCamera(1f, h / w)
     val batch = SpriteBatch()
     val fontbatch = SpriteBatch()
 
@@ -58,14 +56,24 @@ class StarCollector(disposer: Disposer)
 
     val game = Game(sndScore, sndStep, sndDie, PLAYERCOUNT, WORLDCOUNT, SCROLLSPEED, SIZE)
 
+    fun OnSize()
+    {
+        val w = Gdx.graphics.width.toFloat()
+        val h = Gdx.graphics.height.toFloat()
+        backgroundsSprite.setSize(w, h)
+
+        camera = OrthographicCamera(1f, h/w)
+    }
+
     init {
         backgroundsTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
-        backgroundsSprite.setSize(w, h)
         backgroundsSprite.setPosition(0.0f, 0.0f)
         music.setVolume(0.5f)
         music.setLooping(true)
         music.play()
         game.genworld()
+
+        OnSize()
     }
 
     private var first_touch_position: Vector3? = null
