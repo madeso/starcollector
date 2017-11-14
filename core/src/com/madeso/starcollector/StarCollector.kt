@@ -70,16 +70,41 @@ class StarCollector(disposer: Disposer)
         game.genworld()
     }
 
-    private var touchdown = false
-    private var touchpos: Vector3? = null
+    private var first_touch_position: Vector3? = null
 
-    private val touchPosScreen: Vector3
-        get() {
-            val touchPos = Vector3()
-            touchPos.set(Gdx.input.getX(0).toFloat(), Gdx.input.getY(0).toFloat(), 0f)
-            camera.unproject(touchPos)
-            return touchPos
+    fun GetTouchPosition(): Vector3
+    {
+        val touchPos = Vector3()
+        touchPos.set(Gdx.input.getX(0).toFloat(), Gdx.input.getY(0).toFloat(), 0f)
+        camera.unproject(touchPos)
+        return touchPos
+    }
+
+    fun Classify(afrom: Vector3, ato: Vector3) : Maths.Direction
+    {
+        val from = Vector3(afrom)
+        val to = Vector3(ato)
+
+        val diff = 0.04f
+        var dist = to.sub(from)
+        dist.y = -dist.y
+
+        dist = dist.scl(1.0f / diff)
+
+        return Maths.Classify(dist.x, dist.y)
+    }
+
+    fun SelectSpriteBasedOnDirection(dir: Maths.Direction) : Sprite
+    {
+        return when (dir) {
+            Maths.Direction.center -> allSprite
+            Maths.Direction.left -> leftSprite
+            Maths.Direction.up -> downSprite
+            Maths.Direction.right -> rightSprite
+            Maths.Direction.down -> upSprite
+            else -> notSprite
         }
+    }
 
     fun render() {
         game.update(Gdx.graphics.deltaTime)
@@ -106,61 +131,39 @@ class StarCollector(disposer: Disposer)
         game.draw_text(fontbatch, font)
         fontbatch.end()
 
-        val diff = 0.04f
+        val is_currently_touching = Gdx.input.isTouched(0)
+        val current_touch_position = GetTouchPosition()
 
-        if (Gdx.input.isTouched(0)) {
-            if (touchdown == false) {
-                touchdown = true
-                touchpos = touchPosScreen
-            }
+        if (is_currently_touching) {
+            val first_touch_position = this.first_touch_position ?: current_touch_position
+            this.first_touch_position = first_touch_position
 
-            val rtouchPos = Vector3(touchpos)
+            val dir = Classify(first_touch_position, current_touch_position)
 
-            val newTouchPos = touchPosScreen
-            var dist = newTouchPos.sub(touchpos)
-            dist.y = -dist.y
-
-            dist = dist.scl(1.0f / diff)
-
-            val dir = Maths.Classify(dist.x, dist.y)
-
-            if (game.isAlive) {
-                var icon = notSprite
-                if (game.isStopped) {
-                    when (dir) {
-                        5 -> icon = allSprite
-                        4 -> icon = leftSprite
-                        8 -> icon = downSprite
-                        6 -> icon = rightSprite
-                        2 -> icon = upSprite
-                    }
-                }
-                icon.setPosition(rtouchPos.x - icon.width / 2, rtouchPos.y - icon.height / 2)
+            if(game.isAlive && game.isStopped)
+            {
+                val icon = SelectSpriteBasedOnDirection(dir)
+                icon.setPosition(first_touch_position.x - icon.width / 2, first_touch_position.y - icon.height / 2)
                 batch.begin()
                 icon.draw(batch)
                 batch.end()
             }
         } else {
-            if (touchdown) {
-                touchdown = false
-                val newTouchPos = touchPosScreen
-                var dist = newTouchPos.sub(touchpos)
-                dist.y = -dist.y
-                val d = dist.len()
+            // there is no touch , check for release touch
+            val first_touch_position = this.first_touch_position
+            this.first_touch_position = null
+            if (first_touch_position != null) {
+                // touch was released, act on it
 
-                dist = dist.scl(1.0f / diff)
-
-                val dir = Maths.Classify(dist.x, dist.y)
+                val dir = Classify(first_touch_position, current_touch_position)
 
                 when (dir) {
-                    5 -> game.input(Game.Input.tap)
-                    4 -> game.input(Game.Input.left)
-                    6 -> game.input(Game.Input.right)
-                    8 -> game.input(Game.Input.up)
-                    2 -> game.input(Game.Input.down)
-                }
-
-                if (d > 1.0f) {
+                    Maths.Direction.center -> game.input(Game.Input.tap)
+                    Maths.Direction.left -> game.input(Game.Input.left)
+                    Maths.Direction.right -> game.input(Game.Input.right)
+                    Maths.Direction.up -> game.input(Game.Input.up)
+                    Maths.Direction.down -> game.input(Game.Input.down)
+                    else -> {}
                 }
             }
         }

@@ -8,57 +8,62 @@ object Maths {
     private val X = (1.0f / Math.sqrt(2.0)).toFloat()
     val LIM = 0.1f
 
-    fun Classify(dx: Float, dy: Float): Int {
+    enum class Direction
+    {
+        left, right, up, down, center, topleft, topright, bottomleft, bottomright
+    }
+
+    fun Classify(dx: Float, dy: Float): Direction {
         if (Math.sqrt((dx * dx + dy * dy).toDouble()) <= LIM) {
-            return 5
+            return Direction.center
         }
 
         // TODO add more directions
         val d = Vector2(dx, dy).nor()
 
-        var r = 6
+        var r = Direction.right
         var temp = Acos(Vector2(1f, 0f).dot(d))
         var current = temp
 
         temp = Acos(Vector2(-1f, 0f).dot(d))
         if (temp < current) {
-            r = 4
+            r = Direction.left
             current = temp
         }
 
         temp = Acos(Vector2(0f, 1f).dot(d))
         if (temp < current) {
-            r = 8
+            r = Direction.up
             current = temp
         }
 
         temp = Acos(Vector2(0f, -1f).dot(d))
         if (temp < current) {
-            r = 2
+            r = Direction.down
             current = temp
         }
 
         temp = Acos(Vector2(X, X).dot(d))
         if (temp < current) {
-            r = 9
+            r = Direction.topright
             current = temp
         }
 
         temp = Acos(Vector2(-X, X).dot(d))
         if (temp < current) {
-            r = 7
+            r = Direction.topleft
             current = temp
         }
 
         temp = Acos(Vector2(X, -X).dot(d))
         if (temp < current) {
-            r = 3
+            r = Direction.bottomright
             current = temp
         }
 
         temp = Acos(Vector2(-X, -X).dot(d))
         if (temp < current) {
-            r = 1
+            r = Direction.bottomleft
             current = temp
         }
 
