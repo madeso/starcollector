@@ -31,6 +31,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     private var playerIndex: Int = 0
     private var worldIndex: Int = 0
     private var backgroundIndex: Int = 0
+    private var backgroundTimer = 0.0f
 
     internal lateinit var solution: MutableList<Vec2i>
     private var world: Array<IntArray>? = null
@@ -286,8 +287,6 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
 
     internal val isStopped: Boolean
         get() = dx == 0 && dy == 0
-
-    private var backgroundTimer = 0.0f
 
     internal fun dogenworld(): Boolean {
         world = Array(width) { IntArray(height) }
