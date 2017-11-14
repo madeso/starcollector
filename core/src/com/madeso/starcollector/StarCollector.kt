@@ -60,7 +60,6 @@ class StarCollector(disposer: Disposer)
     {
         val w = Gdx.graphics.width.toFloat()
         val h = Gdx.graphics.height.toFloat()
-        backgroundsSprite.setSize(w, h)
 
         camera = OrthographicCamera(1f, h/w)
     }
@@ -68,6 +67,7 @@ class StarCollector(disposer: Disposer)
     init {
         backgroundsTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
         backgroundsSprite.setPosition(0.0f, 0.0f)
+        backgroundsSprite.setSize(1f, 1f)
         music.setVolume(0.5f)
         music.setLooping(true)
         music.play()
@@ -118,19 +118,25 @@ class StarCollector(disposer: Disposer)
         Gdx.gl.glClearColor(94 / 255.0f, 129 / 255.0f, 162 / 255.0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        val normalProjection = Matrix4().setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
-        fontbatch.projectionMatrix = normalProjection
+        val h = Gdx.graphics.height.toFloat()
+        val w = Gdx.graphics.width.toFloat()
 
+        // draw background using 1x1
+        batch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, 1f, 1f)
+        batch.begin()
+        game.drawBackground(batch, backgroundsSprite)
+        batch.end()
+
+        // draw world
         batch.projectionMatrix = camera.combined
-
-        fontbatch.begin()
-        game.drawBackground(fontbatch, backgroundsSprite)
-        fontbatch.end()
-
         batch.begin()
         game.draw(batch, worldSprite, starSprite, playerSprite)
         batch.end()
 
+        // draw text using a fake resolution
+        val aspect = h / w
+        val size = 600f
+        fontbatch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, size, size * aspect)
         fontbatch.begin()
         font.setColor(0f, 0f, 0f, 1.0f)
         game.draw_text(fontbatch, font)
