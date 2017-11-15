@@ -7,13 +7,23 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.badlogic.gdx.utils.viewport.FillViewport
+import com.badlogic.gdx.utils.viewport.FitViewport
+import com.badlogic.gdx.utils.viewport.StretchViewport
 
 class StarCollector(disposer: Disposer)
 {
-    var camera = OrthographicCamera(1f, 1f)
+    val world_camera = OrthographicCamera()
+    val world_display = FitViewport(1f, 1f, world_camera)
+
+    val background_camera = OrthographicCamera()
+    val background_display = FillViewport(1f, 1f, background_camera)
+
+    val text_camera = OrthographicCamera()
+    val text_display = ExtendViewport(600f, 600f, text_camera)
 
     val batch = SpriteBatch()
     val fontbatch = SpriteBatch()
@@ -58,10 +68,12 @@ class StarCollector(disposer: Disposer)
 
     fun OnSize()
     {
-        val w = Gdx.graphics.width.toFloat()
-        val h = Gdx.graphics.height.toFloat()
+        val w = Gdx.graphics.width
+        val h = Gdx.graphics.height
 
-        camera = OrthographicCamera(1f, h/w)
+        background_display.update(w,h, true)
+        world_display.update(w, h, false)
+        text_display.update(w, h, true)
     }
 
     init {
@@ -82,7 +94,7 @@ class StarCollector(disposer: Disposer)
     {
         val touchPos = Vector3()
         touchPos.set(Gdx.input.getX(0).toFloat(), Gdx.input.getY(0).toFloat(), 0f)
-        camera.unproject(touchPos)
+        world_camera.unproject(touchPos)
         return touchPos
     }
 
@@ -115,32 +127,7 @@ class StarCollector(disposer: Disposer)
     fun render() {
         game.update(Gdx.graphics.deltaTime)
 
-        Gdx.gl.glClearColor(94 / 255.0f, 129 / 255.0f, 162 / 255.0f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-
-        val h = Gdx.graphics.height.toFloat()
-        val w = Gdx.graphics.width.toFloat()
-
-        // draw background using 1x1
-        batch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, 1f, 1f)
-        batch.begin()
-        game.drawBackground(batch, backgroundsSprite)
-        batch.end()
-
-        // draw world
-        batch.projectionMatrix = camera.combined
-        batch.begin()
-        game.draw(batch, worldSprite, starSprite, playerSprite)
-        batch.end()
-
-        // draw text using a fake resolution
-        val aspect = h / w
-        val size = 600f
-        fontbatch.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, size, size * aspect)
-        fontbatch.begin()
-        font.setColor(0f, 0f, 0f, 1.0f)
-        game.draw_text(fontbatch, font)
-        fontbatch.end()
+        var ui_icon : Sprite? = null
 
         val is_currently_touching = Gdx.input.isTouched(0)
         val current_touch_position = GetTouchPosition()
@@ -155,9 +142,7 @@ class StarCollector(disposer: Disposer)
             {
                 val icon = SelectSpriteBasedOnDirection(dir)
                 icon.setPosition(first_touch_position.x - icon.width / 2, first_touch_position.y - icon.height / 2)
-                batch.begin()
-                icon.draw(batch)
-                batch.end()
+                ui_icon = icon
             }
         } else {
             // there is no touch , check for release touch
@@ -178,5 +163,38 @@ class StarCollector(disposer: Disposer)
                 }
             }
         }
+
+        Gdx.gl.glClearColor(94 / 255.0f, 129 / 255.0f, 162 / 255.0f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
+        val h = Gdx.graphics.height.toFloat()
+        val w = Gdx.graphics.width.toFloat()
+
+        background_display.apply()
+        batch.projectionMatrix = background_camera.combined
+        batch.begin()
+        game.drawBackground(batch, backgroundsSprite)
+        batch.end()
+
+        // draw world
+        world_display.apply()
+        batch.projectionMatrix = world_camera.combined
+        batch.begin()
+        game.draw(batch, worldSprite, starSprite, playerSprite)
+        batch.end()
+
+        if(ui_icon != null)
+        {
+            batch.begin()
+            ui_icon.draw(batch)
+            batch.end()
+        }
+
+        text_display.apply()
+        fontbatch.projectionMatrix = text_camera.combined
+        fontbatch.begin()
+        font.setColor(0f, 0f, 0f, 1.0f)
+        game.draw_text(fontbatch, font)
+        fontbatch.end()
     }
 }
