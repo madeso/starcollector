@@ -33,14 +33,14 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     private var backgroundIndex: Int = 0
     private var backgroundTimer = 0.0f
 
-    internal lateinit var solution: MutableList<Vec2i>
-    private var world: Array<IntArray>? = null
-    private var mem: Array<BooleanArray>? = null
+    internal var solution = ArrayList<Vec2i>()
+    private var world = Array(width) { IntArray(height) }
+    private var mem = Array(width) { BooleanArray(height) }
 
     fun isfree(x: Int, y: Int): Boolean {
         return if (playerx == x && playery == y) {
             false
-        } else mem!![x][y] == false
+        } else mem[x][y] == false
     }
 
     internal fun remember(sx: Int, sy: Int, nx: Int, ny: Int) {
@@ -62,7 +62,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         }
 
         do {
-            mem!![x][y] = true
+            mem[x][y] = true
 
             // for solution traversing
             solution.add(Vec2i(x, y))
@@ -121,11 +121,11 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
             nx = pos.x
             ny = pos.y
 
-            if (world!![nx][ny] == 0 && isfree(nx, ny)) {
+            if (world[nx][ny] == 0 && isfree(nx, ny)) {
                 remember(x, y, nx, ny)
                 x = nx
                 y = ny
-                world!![x][y] = 1
+                world[x][y] = 1
                 itemsleft = itemsleft + 1
 
                 i = i + 1
@@ -199,8 +199,8 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
             return false
         }
 
-        if (world!![playerx][playery] != 0) {
-            world!![playerx][playery] = 0
+        if (world[playerx][playery] != 0) {
+            world[playerx][playery] = 0
             score()
             return false
         }
@@ -273,9 +273,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         get() = dx == 0 && dy == 0
 
     internal fun dogenworld(): Boolean {
-        world = Array(width) { IntArray(height) }
-        mem = Array(width) { BooleanArray(height) }
-        solution = ArrayList()
+        solution.clear()
 
         playerx = math_random(width)
         playery = math_random(height)
@@ -293,8 +291,8 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
 
         for (x in 0..width - 1) {
             for (y in 0..height - 1) {
-                world!![x][y] = 0
-                mem!![x][y] = false
+                world[x][y] = 0
+                mem[x][y] = false
             }
         }
 
@@ -339,7 +337,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
 
     private fun drawStars(batch: SpriteBatch, star: Sprite, y: Int) {
         for (x in 0..width - 1) {
-            if (world!![x][y] != 0) {
+            if (world[x][y] != 0) {
                 val p2 = transform(x, y)
                 star.setPosition(p2.x, p2.y)
                 star.draw(batch)
