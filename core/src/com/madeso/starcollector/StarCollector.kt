@@ -58,10 +58,6 @@ class StarCollector(disposer: Disposer)
 
     val assets = Assets(disposer)
 
-    val music = disposer.CreateMusic("data/Malloga_Ballinga_Mastered_mp_0.mp3")
-
-    val font = BitmapFont() // BitmapFont(Gdx.files.internal("Calibri.fnt"),Gdx.files.internal("Calibri.png"),false);
-
     val game = Game(assets, PLAYERCOUNT, WORLDCOUNT, SCROLLSPEED, SIZE)
 
     fun OnSize()
@@ -78,9 +74,9 @@ class StarCollector(disposer: Disposer)
         backgroundsTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
         backgroundsSprite.setPosition(0.0f, 0.0f)
         backgroundsSprite.setSize(1f, 1f)
-        music.setVolume(0.5f)
-        music.setLooping(true)
-        music.play()
+        assets.music.setVolume(0.5f)
+        assets.music.setLooping(true)
+        assets.music.play()
         game.genworld()
 
         OnSize()
@@ -191,8 +187,8 @@ class StarCollector(disposer: Disposer)
         text_display.apply()
         fontbatch.projectionMatrix = text_camera.combined
         fontbatch.begin()
-        font.setColor(0f, 0f, 0f, 1.0f)
-        game.draw_text(fontbatch, font)
+        assets.font.setColor(0f, 0f, 0f, 1.0f)
+        game.draw_text(fontbatch, assets.font)
         fontbatch.end()
     }
 }
