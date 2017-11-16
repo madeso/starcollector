@@ -34,7 +34,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     private var backgroundTimer = 0.0f
 
     internal var solution = ArrayList<Vec2i>()
-    private var world = Array(width) { IntArray(height) }
+    private val world = World(width, height)
     private var mem = Array(width) { BooleanArray(height) }
 
     fun isfree(x: Int, y: Int): Boolean {
@@ -121,11 +121,11 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
             nx = pos.x
             ny = pos.y
 
-            if (world[nx][ny] == 0 && isfree(nx, ny)) {
+            if (world.IsFree(nx, ny) && isfree(nx, ny)) {
                 remember(x, y, nx, ny)
                 x = nx
                 y = ny
-                world[x][y] = 1
+                world.PlaceStar(x, y)
                 itemsleft = itemsleft + 1
 
                 i = i + 1
@@ -199,8 +199,8 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
             return false
         }
 
-        if (world[playerx][playery] != 0) {
-            world[playerx][playery] = 0
+        if (!world.IsFree(playerx, playery)) {
+            world.RemoveStar(playerx, playery)
             score()
             return false
         }
@@ -289,9 +289,9 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
         dx = 0
         dy = 0
 
+        world.Clear()
         for (x in 0..width - 1) {
             for (y in 0..height - 1) {
-                world[x][y] = 0
                 mem[x][y] = false
             }
         }
@@ -337,7 +337,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
 
     private fun drawStars(batch: SpriteBatch, star: Sprite, y: Int) {
         for (x in 0..width - 1) {
-            if (world[x][y] != 0) {
+            if ( !world.IsFree(x, y) ) {
                 val p2 = transform(x, y)
                 star.setPosition(p2.x, p2.y)
                 star.draw(batch)
