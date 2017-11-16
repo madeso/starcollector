@@ -32,7 +32,7 @@ class StarCollector(disposer: Disposer)
     val PLAYERCOUNT = 5
     val WORLDCOUNT = 10
     val SCROLLSPEED = 0.02f
-    val SIZE = 0.025f
+    val SIZE = 0.04f
 
     val starSprite = disposer.CreateSprite(disposer.CreateTexture("data/star.png"), SIZE)
 
