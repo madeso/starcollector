@@ -56,15 +56,13 @@ class StarCollector(disposer: Disposer)
         disposer.CreateSprite(disposer.CreateTexture("world/" + Integer.toString(it + 1) + "-mid.png"), SIZE * 2)
     }
 
-    val sndScore = disposer.CreateSound("data/score.wav")
-    val sndStep = disposer.CreateSound("data/step.wav")
-    val sndDie = disposer.CreateSound("data/die.wav")
+    val assets = Assets(disposer)
 
     val music = disposer.CreateMusic("data/Malloga_Ballinga_Mastered_mp_0.mp3")
 
     val font = BitmapFont() // BitmapFont(Gdx.files.internal("Calibri.fnt"),Gdx.files.internal("Calibri.png"),false);
 
-    val game = Game(sndScore, sndStep, sndDie, PLAYERCOUNT, WORLDCOUNT, SCROLLSPEED, SIZE)
+    val game = Game(assets, PLAYERCOUNT, WORLDCOUNT, SCROLLSPEED, SIZE)
 
     fun OnSize()
     {

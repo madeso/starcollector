@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
 
-class Game(internal var sScore: Sound, internal var sStep: Sound, internal var sDie: Sound, val playercount : Int, val worldcount: Int, val scrollspeed : Float, val size: Float) {
+class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val scrollspeed : Float, val size: Float) {
 
     private val width = 20
     private val height = 20
@@ -45,7 +45,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     internal fun gameover() {
         isAlive = false
         canplaytext = "Game over. Tap to restart."
-        sDie.play()
+        assets.sDie.play()
         println("FAIL!")
         Gdx.input.cancelVibrate()
         Gdx.input.vibrate(500)
@@ -58,7 +58,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     }
 
     internal fun score() {
-        sScore.play()
+        assets.sScore.play()
         println("Score!")
         itemsleft = itemsleft - 1
         if (itemsleft == 0) {
@@ -100,7 +100,7 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
             return false
         }
 
-        sStep.play()
+        assets.sStep.play()
 
         return true
     }
