@@ -200,7 +200,7 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         background.draw(batch)
     }
 
-    fun draw(batch: SpriteBatch, world: Array<Sprite>, star: Sprite, player: Array<Sprite>) {
+    fun draw(batch: SpriteBatch, world: Array<WorldTexture>, star: Sprite, player: Array<Sprite>) {
         drawPlayer(batch, player, height)
         for (y in height - 1 downTo 0) {
             drawWorld(batch, world, y)
@@ -220,11 +220,12 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         }
     }
 
-    private fun drawWorld(batch: SpriteBatch, sprite: Array<Sprite>, y: Int) {
+    private fun drawWorld(batch: SpriteBatch, sprite: Array<WorldTexture>, y: Int) {
         for (x in 0..width - 1) {
             val p2 = transform(x, y)
-            sprite[worldIndex].setPosition(p2.x, p2.y - size * (8.0f / 16.0f))
-            sprite[worldIndex].draw(batch)
+            val sp = sprite[worldIndex].mid
+            sp.setPosition(p2.x, p2.y - size * (8.0f / 16.0f))
+            sp.draw(batch)
         }
     }
 

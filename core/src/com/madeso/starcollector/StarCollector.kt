@@ -30,7 +30,6 @@ class StarCollector(disposer: Disposer)
 
     val BUTTONSIZE = 0.1f
     val PLAYERCOUNT = 5
-    val WORLDCOUNT = 10
     val SCROLLSPEED = 0.02f
     val SIZE = 0.04f
 
@@ -38,7 +37,7 @@ class StarCollector(disposer: Disposer)
 
     val playerSprite = Array(PLAYERCOUNT)
     {
-        disposer.CreateSprite(disposer.CreateTexture("player/" + Integer.toString(it + 1) + ".png"), SIZE * 2)
+        disposer.CreateSpriteRatio(disposer.CreateTexture("player/" + Integer.toString(it + 1) + ".png"), SIZE)
     }
 
     val allSprite = disposer.CreateSprite(disposer.CreateTexture("input/all.png"), BUTTONSIZE * 2)
@@ -51,14 +50,15 @@ class StarCollector(disposer: Disposer)
     val backgroundsTexture = disposer.CreateTexture("data/backgrounds.png")
     val backgroundsSprite = Sprite(backgroundsTexture)
 
-    val worldSprite = Array(WORLDCOUNT)
+    private val world_names = arrayListOf("castle", "dirt", "grass", "magic", "mud", "sand", "snow", "stone")
+    val worldSprite = Array(world_names.size)
     {
-        disposer.CreateSprite(disposer.CreateTexture("world/" + Integer.toString(it + 1) + "-mid.png"), SIZE * 2)
+        WorldTexture(disposer, world_names[it], SIZE)
     }
 
     val assets = Assets(disposer)
 
-    val game = Game(assets, PLAYERCOUNT, WORLDCOUNT, SCROLLSPEED, SIZE)
+    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SCROLLSPEED, SIZE)
 
     fun OnSize()
     {

@@ -18,6 +18,16 @@ class Disposer
         return sprite
     }
 
+    fun CreateSpriteRatio(texture: Texture, width: Float): Sprite
+    {
+        val sprite = Sprite(TextureRegion(texture))
+        val aspect = texture.height/texture.width.toFloat()
+        sprite.setSize(width, width * aspect)
+        sprite.setOrigin(sprite.width / 2,
+                0f)
+        return sprite
+    }
+
     val textures = mutableListOf<Texture>()
     fun CreateTexture(path: String): Texture
     {
