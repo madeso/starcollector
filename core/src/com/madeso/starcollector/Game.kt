@@ -223,7 +223,13 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
     private fun drawWorld(batch: SpriteBatch, sprite: Array<WorldTexture>, y: Int) {
         for (x in 0..width - 1) {
             val p2 = transform(x, y)
-            val sp = sprite[worldIndex].mid
+            val texture = sprite[worldIndex]
+            val sp = when(x)
+            {
+                0 -> texture.left
+                width-1 -> texture.right
+                else -> texture.mid
+            }
             sp.setPosition(p2.x, p2.y - size * (8.0f / 16.0f))
             sp.draw(batch)
         }
