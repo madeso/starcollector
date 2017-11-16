@@ -1,14 +1,11 @@
 package com.madeso.starcollector
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.graphics.Color
-import java.util.*
+import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector2
 
 
 class Game(internal var sScore: Sound, internal var sStep: Sound, internal var sDie: Sound, val playercount : Int, val worldcount: Int, val scrollspeed : Float, val size: Float) {
@@ -27,124 +24,22 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     internal var dx = 0
     internal var dy = 0
 
-    internal var rand = Random()
+    val rand = Randomizer()
+
     private var playerIndex: Int = 0
     private var worldIndex: Int = 0
     private var backgroundIndex: Int = 0
     private var backgroundTimer = 0.0f
 
-    internal var solution = ArrayList<Vec2i>()
     private val world = World(width, height)
-    private var mem = Array(width) { BooleanArray(height) }
 
-    fun isfree(x: Int, y: Int): Boolean {
-        return if (playerx == x && playery == y) {
-            false
-        } else mem[x][y] == false
-    }
+    internal fun transform(x: Int, y: Int): Vector2 {
+        val step = size
 
-    internal fun remember(sx: Int, sy: Int, nx: Int, ny: Int) {
-        var x = sx
-        var y = sy
-        var dx = 0
-        var dy = 0
+        val startx = step - step * width / 2.0f
+        val starty = step - step * height / 2.0f
 
-        if (x > nx) {
-            dx = -1
-        } else if (x < nx) {
-            dx = 1
-        }
-
-        if (y > ny) {
-            dy = -1
-        } else if (y < ny) {
-            dy = 1
-        }
-
-        do {
-            mem[x][y] = true
-
-            // for solution traversing
-            solution.add(Vec2i(x, y))
-
-            x = x + dx
-            y = y + dy
-        } while (false == (x == nx && y == ny))
-    }
-
-    internal fun listValidPositions(sx: Int, sy: Int): List<Vec2i> {
-        val r = ArrayList<Vec2i>()
-
-        for (x in 0..width - 1) {
-            if (x != sx) {
-                r.add(Vec2i(x, sy))
-            }
-        }
-
-        for (y in 0..height - 1) {
-            if (y != sy) {
-                r.add(Vec2i(sx, y))
-            }
-        }
-
-        return r
-    }
-
-    internal fun fillworld(): Boolean {
-        var x = playerx
-        var y = playery
-        var nx: Int
-        var ny: Int
-
-        var done = false
-
-        var positions: List<Vec2i> = ArrayList()
-        var pos: Vec2i? = null
-        var generate = true
-        var randomindex = 0
-        var i = 0
-
-        do {
-            if (generate) {
-                positions = listValidPositions(x, y)
-                // generated valid positions
-                generate = false
-            }
-
-            if (positions.size == 0) {
-                // no more valid positions, failing...
-                return false
-            }
-
-            randomindex = math_random(positions.size)
-            pos = positions[randomindex]
-            nx = pos.x
-            ny = pos.y
-
-            if (world.IsFree(nx, ny) && isfree(nx, ny)) {
-                remember(x, y, nx, ny)
-                x = nx
-                y = ny
-                world.PlaceStar(x, y)
-                itemsleft = itemsleft + 1
-
-                i = i + 1
-                if (i > items) {
-                    done = true
-                }
-
-                generate = true
-            }
-        } while (done == false)
-
-        // for solution traversing
-        solution.add(Vec2i(x, y))
-
-        return true
-    }
-
-    private fun math_random(size: Int): Int {
-        return rand.nextInt(size)
+        return Vector2(startx + step * (x - 1), starty + step * (y - 1))
     }
 
     internal fun gameover() {
@@ -272,47 +167,27 @@ class Game(internal var sScore: Sound, internal var sStep: Sound, internal var s
     internal val isStopped: Boolean
         get() = dx == 0 && dy == 0
 
-    internal fun dogenworld(): Boolean {
-        solution.clear()
+    fun genworld() {
+        canplaytext = ""
+        isAlive = true
 
-        playerx = math_random(width)
-        playery = math_random(height)
         isAlive = true
         canplaytext = ""
-        playerIndex = math_random(playercount)
-        worldIndex = math_random(worldcount)
-        backgroundIndex = math_random(3)
 
-        itemsleft = 0
+        itemsleft = items
 
         timer = 0f
         dx = 0
         dy = 0
 
-        world.Clear()
-        for (x in 0..width - 1) {
-            for (y in 0..height - 1) {
-                mem[x][y] = false
-            }
-        }
+        val generator = WorldGenerator(world, width, height, items)
+        generator.genworld()
+        playerx = generator.playerx
+        playery = generator.playery
 
-        return fillworld()
-    }
-
-    fun genworld() {
-        var complete = false
-        do {
-            complete = dogenworld()
-        } while (complete == false)
-    }
-
-    internal fun transform(x: Int, y: Int): Vector2 {
-        val step = size
-
-        val startx = step - step * width / 2.0f
-        val starty = step - step * height / 2.0f
-
-        return Vector2(startx + step * (x - 1), starty + step * (y - 1))
+        playerIndex = rand.random(playercount)
+        worldIndex = rand.random(worldcount)
+        backgroundIndex = rand.random(3)
     }
 
     fun drawBackground(batch: SpriteBatch, background: Sprite) {
