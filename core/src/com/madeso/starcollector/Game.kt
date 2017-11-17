@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
 
-class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val size: Float, val number_of_stars : Int) {
+class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val size: Float, val number_of_stars : Int, val background: Background) {
 
     private val width = 20
     private val height = 20
@@ -172,6 +172,8 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         timer = 0f
         dx = 0
         dy = 0
+
+        background.SetRandomBackground()
 
         val generator = WorldGenerator(world, width, height, items)
         generator.genworld(number_of_stars)

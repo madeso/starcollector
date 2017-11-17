@@ -58,7 +58,7 @@ class StarCollector(disposer: Disposer)
 
     val assets = Assets(disposer)
 
-    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SIZE, starSprite.size)
+    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SIZE, starSprite.size, background)
 
     fun OnSize()
     {

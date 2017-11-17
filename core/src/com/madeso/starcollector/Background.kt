@@ -13,20 +13,33 @@ class Background(disposer: Disposer, val scrollspeed : Float)
     val background_camera = OrthographicCamera()
     val background_display = FillViewport(1f, 1f, background_camera)
 
-    val backgroundsTexture = disposer.CreateTexture("data/backgrounds.png")
-    val backgroundsSprite = Sprite(backgroundsTexture)
-
     private var backgroundIndex: Int = 0
     private var backgroundTimer = 0.0f
 
-    val rand = Randomizer()
+    val SIZE = 1f
 
-    init
+    val names = arrayListOf(
+
+            "colored_castle",  "colored_forest",     "uncolored_castle",  "uncolored_forest",  "uncolored_peaks",     "uncolored_plain",
+            "colored_desert",  "colored_talltrees",  "uncolored_desert",  "uncolored_hills",   "uncolored_piramids",  "uncolored_talltrees"
+
+
+    )
+
+    val backgroundsTextures = Array(names.size)
     {
-        backgroundsTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
-        backgroundsSprite.setPosition(0.0f, 0.0f)
-        backgroundsSprite.setSize(1f, 1f)
+        val text = disposer.CreateTexture("backgrounds/" + names[it] + ".png")
+        text.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
+        text
     }
+    val backgroundsSprites = Array(names.size) {
+        val sprite = Sprite(backgroundsTextures[it])
+        sprite.setPosition(0.0f, 0.0f)
+        sprite.setSize(1f, 1f)
+        sprite
+    }
+
+    val rand = Randomizer()
 
     fun OnSize(w: Int, h: Int)
     {
@@ -38,19 +51,19 @@ class Background(disposer: Disposer, val scrollspeed : Float)
         background_display.apply()
         batch.projectionMatrix = background_camera.combined
         batch.begin()
-        drawBackground(batch, backgroundsSprite)
+        drawBackground(batch, backgroundsSprites[backgroundIndex])
         batch.end()
     }
 
     fun SetRandomBackground()
     {
-        backgroundIndex = rand.random(3)
+        backgroundIndex = rand.random(backgroundsSprites.size)
     }
 
     fun Update(dt: Float) {
         backgroundTimer += dt * scrollspeed
-        while (backgroundTimer > 1.0f) {
-            backgroundTimer -= 1.0f
+        while (backgroundTimer > 1f) {
+            backgroundTimer -= 1f
         }
     }
 
@@ -58,9 +71,8 @@ class Background(disposer: Disposer, val scrollspeed : Float)
         background.u = backgroundTimer
         background.u2 = backgroundTimer + 1
 
-        val HEIGHT = 1 / 3.0f
-        background.v = backgroundIndex * HEIGHT
-        background.v2 = (backgroundIndex + 1) * HEIGHT
+        background.v = 0f
+        background.v2 = 1f
         background.draw(batch)
     }
 }
