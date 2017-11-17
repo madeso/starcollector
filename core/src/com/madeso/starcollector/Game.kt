@@ -210,12 +210,19 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         for (x in 0..width - 1) {
             val p2 = transform(x, y)
             val texture = sprite[worldIndex]
-            val sp = when(x)
+            val xval = when(x)
             {
-                0 -> texture.left
-                width-1 -> texture.right
-                else -> texture.mid
+                0 -> 0
+                width-1 -> 2
+                else -> 1
             }
+            val yval = when(y)
+            {
+                0 -> 0
+                height-1 -> 2
+                else -> 1
+            }
+            val sp = texture.sprite(xval, yval)
             sp.setPosition(p2.x, p2.y - size * (8.0f / 16.0f))
             sp.draw(batch)
         }

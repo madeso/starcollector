@@ -50,10 +50,10 @@ class StarCollector(disposer: Disposer)
 
     val background = Background(disposer, SCROLLSPEED)
 
-    private val world_names = arrayListOf("castle", "dirt", "grass", "magic", "mud", "sand", "snow", "stone")
-    val worldSprite = Array(world_names.size)
+    // private val world_names = arrayListOf("1", "2")
+    val worldSprite = Array(6)
     {
-        WorldTexture(disposer, world_names[it], SIZE)
+        WorldTexture(disposer, (it + 1).toString(), SIZE)
     }
 
     val assets = Assets(disposer)
