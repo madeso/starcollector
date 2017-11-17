@@ -33,7 +33,11 @@ class StarCollector(disposer: Disposer)
     val SCROLLSPEED = 0.02f
     val SIZE = 0.04f
 
-    val starSprite = disposer.CreateSprite(disposer.CreateTexture("data/star.png"), SIZE)
+    val star_names = arrayListOf("coinBronze", "coinGold", "coinSilver", "gemBlue", "gemGreen", "gemRed", "gemYellow", "star")
+    val starSprite = Array(star_names.size)
+    {
+        disposer.CreateSprite(disposer.CreateTexture("data/" + star_names[it] + ".png"), SIZE)
+    }
 
     val playerSprite = Array(PLAYERCOUNT)
     {
@@ -58,7 +62,7 @@ class StarCollector(disposer: Disposer)
 
     val assets = Assets(disposer)
 
-    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SCROLLSPEED, SIZE)
+    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SCROLLSPEED, SIZE, starSprite.size)
 
     fun OnSize()
     {

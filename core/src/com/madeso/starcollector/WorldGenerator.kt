@@ -30,7 +30,7 @@ class WorldGenerator(val world: World, val width: Int, val height: Int, val item
         return r
     }
 
-    private fun dogenworld(): Boolean {
+    private fun dogenworld(number_of_stars: Int): Boolean {
         solution.clear()
 
         playerx = rand.random(width)
@@ -43,10 +43,10 @@ class WorldGenerator(val world: World, val width: Int, val height: Int, val item
             }
         }
 
-        return fillworld()
+        return fillworld(number_of_stars)
     }
 
-    private fun fillworld(): Boolean {
+    private fun fillworld(number_of_stars: Int): Boolean {
         var x = playerx
         var y = playery
         var nx: Int
@@ -81,7 +81,7 @@ class WorldGenerator(val world: World, val width: Int, val height: Int, val item
                 remember(x, y, nx, ny)
                 x = nx
                 y = ny
-                world.PlaceStar(x, y)
+                world.PlaceStar(x, y, rand.random(number_of_stars))
                 // itemsleft = itemsleft + 1
 
                 i = i + 1
@@ -99,10 +99,10 @@ class WorldGenerator(val world: World, val width: Int, val height: Int, val item
         return true
     }
 
-    fun genworld() {
+    fun genworld(number_of_stars: Int) {
         var complete = false
         do {
-            complete = dogenworld()
+            complete = dogenworld(number_of_stars)
         } while (complete == false)
     }
 

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
 
-class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val scrollspeed : Float, val size: Float) {
+class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val scrollspeed : Float, val size: Float, val number_of_stars : Int) {
 
     private val width = 20
     private val height = 20
@@ -181,7 +181,7 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         dy = 0
 
         val generator = WorldGenerator(world, width, height, items)
-        generator.genworld()
+        generator.genworld(number_of_stars)
         playerx = generator.playerx
         playery = generator.playery
 
@@ -200,7 +200,7 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         background.draw(batch)
     }
 
-    fun draw(batch: SpriteBatch, world: Array<WorldTexture>, star: Sprite, player: Array<Sprite>) {
+    fun draw(batch: SpriteBatch, world: Array<WorldTexture>, star: Array<Sprite>, player: Array<Sprite>) {
         drawPlayer(batch, player, height)
         for (y in height - 1 downTo 0) {
             drawWorld(batch, world, y)
@@ -210,9 +210,11 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         drawPlayer(batch, player,-1)
     }
 
-    private fun drawStars(batch: SpriteBatch, star: Sprite, y: Int) {
+    private fun drawStars(batch: SpriteBatch, stars: Array<Sprite>, y: Int) {
         for (x in 0..width - 1) {
-            if ( !world.IsFree(x, y) ) {
+            val star_index = world.GetStarIndex(x, y)
+            if ( star_index != 0 ) {
+                val star = stars[star_index-1]
                 val p2 = transform(x, y)
                 star.setPosition(p2.x, p2.y)
                 star.draw(batch)

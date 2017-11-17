@@ -6,8 +6,10 @@ class World(val width : Int, val height: Int)
 
     fun IsFree(nx: Int, ny: Int) = world[nx][ny] == 0
 
-    fun PlaceStar(x: Int, y: Int) {
-        world[x][y] = 1
+    fun GetStarIndex(nx: Int, ny: Int) = world[nx][ny]
+
+    fun PlaceStar(x: Int, y: Int, star_index : Int) {
+        world[x][y] = star_index + 1
     }
 
     fun RemoveStar(x: Int, y: Int) {
