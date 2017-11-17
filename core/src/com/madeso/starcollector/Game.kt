@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
 
-class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val scrollspeed : Float, val size: Float, val number_of_stars : Int) {
+class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val size: Float, val number_of_stars : Int) {
 
     private val width = 20
     private val height = 20
@@ -28,8 +28,6 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
 
     private var playerIndex: Int = 0
     private var worldIndex: Int = 0
-    private var backgroundIndex: Int = 0
-    private var backgroundTimer = 0.0f
 
     private val world = World(width, height)
 
@@ -106,11 +104,6 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
     }
 
     internal fun update(dt: Float) {
-        backgroundTimer += dt * scrollspeed
-        while (backgroundTimer > 1.0f) {
-            backgroundTimer -= 1.0f
-        }
-
         if (isAlive) {
             if (dx != 0 || dy != 0) {
                 if (timer <= 0) {
@@ -187,17 +180,6 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
 
         playerIndex = rand.random(playercount)
         worldIndex = rand.random(worldcount)
-        backgroundIndex = rand.random(3)
-    }
-
-    fun drawBackground(batch: SpriteBatch, background: Sprite) {
-        background.u = backgroundTimer
-        background.u2 = backgroundTimer + 1
-
-        val HEIGHT = 1 / 3.0f
-        background.v = backgroundIndex * HEIGHT
-        background.v2 = (backgroundIndex + 1) * HEIGHT
-        background.draw(batch)
     }
 
     fun draw(batch: SpriteBatch, world: Array<WorldTexture>, star: Array<Sprite>, player: Array<Sprite>) {

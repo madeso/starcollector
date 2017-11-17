@@ -19,9 +19,6 @@ class StarCollector(disposer: Disposer)
     val world_camera = OrthographicCamera()
     val world_display = FitViewport(1f, 1f, world_camera)
 
-    val background_camera = OrthographicCamera()
-    val background_display = FillViewport(1f, 1f, background_camera)
-
     val text_camera = OrthographicCamera()
     val text_display = ExtendViewport(600f, 600f, text_camera)
 
@@ -51,8 +48,7 @@ class StarCollector(disposer: Disposer)
     val downSprite = disposer.CreateSprite(disposer.CreateTexture("input/down.png"), BUTTONSIZE)
     val notSprite = disposer.CreateSprite(disposer.CreateTexture("input/not.png"), BUTTONSIZE)
 
-    val backgroundsTexture = disposer.CreateTexture("data/backgrounds.png")
-    val backgroundsSprite = Sprite(backgroundsTexture)
+    val background = Background(disposer, SCROLLSPEED)
 
     private val world_names = arrayListOf("castle", "dirt", "grass", "magic", "mud", "sand", "snow", "stone")
     val worldSprite = Array(world_names.size)
@@ -62,22 +58,19 @@ class StarCollector(disposer: Disposer)
 
     val assets = Assets(disposer)
 
-    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SCROLLSPEED, SIZE, starSprite.size)
+    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SIZE, starSprite.size)
 
     fun OnSize()
     {
         val w = Gdx.graphics.width
         val h = Gdx.graphics.height
 
-        background_display.update(w,h, true)
+        background.OnSize(w, h)
         world_display.update(w, h, false)
         text_display.update(w, h, true)
     }
 
     init {
-        backgroundsTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
-        backgroundsSprite.setPosition(0.0f, 0.0f)
-        backgroundsSprite.setSize(1f, 1f)
         assets.music.setVolume(0.5f)
         assets.music.setLooping(true)
         assets.music.play()
@@ -124,6 +117,7 @@ class StarCollector(disposer: Disposer)
 
     fun render() {
         game.update(Gdx.graphics.deltaTime)
+        background.Update(Gdx.graphics.deltaTime)
 
         var ui_icon : Sprite? = null
 
@@ -168,11 +162,7 @@ class StarCollector(disposer: Disposer)
         val h = Gdx.graphics.height.toFloat()
         val w = Gdx.graphics.width.toFloat()
 
-        background_display.apply()
-        batch.projectionMatrix = background_camera.combined
-        batch.begin()
-        game.drawBackground(batch, backgroundsSprite)
-        batch.end()
+        background.Draw()
 
         // draw world
         world_display.apply()
