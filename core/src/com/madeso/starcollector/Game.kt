@@ -8,10 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
 
-class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val size: Float, val number_of_stars : Int, val background: Background) {
+class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val size: Float, val number_of_stars : Int, val world : World, val width : Int, val height: Int, val state : States) {
 
-    private val width = 20
-    private val height = 20
     private val items = 10
 
     internal var itemsleft = 0
@@ -28,8 +26,6 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
 
     private var playerIndex: Int = 0
     private var worldIndex: Int = 0
-
-    private val world = World(width, height)
 
     internal fun transform(x: Int, y: Int): Vector2 {
         val step = size
@@ -152,7 +148,7 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
             }
         } else {
             if (input == Input.tap) {
-                genworld()
+                state.CreateNewWorld()
             }
         }
     }
@@ -160,7 +156,7 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
     internal val isStopped: Boolean
         get() = dx == 0 && dy == 0
 
-    fun genworld() {
+    fun CreateWorld() {
         canplaytext = ""
         isAlive = true
 
@@ -172,8 +168,6 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         timer = 0f
         dx = 0
         dy = 0
-
-        background.SetRandomBackground()
 
         val generator = WorldGenerator(world, width, height, items)
         generator.genworld(number_of_stars)

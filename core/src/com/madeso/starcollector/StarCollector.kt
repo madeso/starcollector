@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport
 class StarCollector(disposer: Disposer)
 {
     val world_camera = OrthographicCamera()
-    val world_display = FitViewport(1f, 1f, world_camera)
+    val world_display = ExtendViewport(1f, 1f, world_camera)
 
     val text_camera = OrthographicCamera()
     val text_display = ExtendViewport(600f, 600f, text_camera)
@@ -58,7 +58,13 @@ class StarCollector(disposer: Disposer)
 
     val assets = Assets(disposer)
 
-    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SIZE, starSprite.size, background)
+    private val width = 20
+    private val height = 20
+    val world = World(width, height)
+
+    val state = States(world_camera, background, world)
+
+    val game = Game(assets, PLAYERCOUNT, worldSprite.size, SIZE, starSprite.size, world, width, height, state)
 
     fun OnSize()
     {
@@ -71,10 +77,12 @@ class StarCollector(disposer: Disposer)
     }
 
     init {
+        state.game = game
+
         assets.music.setVolume(0.5f)
         assets.music.setLooping(true)
         assets.music.play()
-        game.genworld()
+        // game.genworld()
 
         OnSize()
     }
@@ -118,40 +126,44 @@ class StarCollector(disposer: Disposer)
     fun render() {
         game.update(Gdx.graphics.deltaTime)
         background.Update(Gdx.graphics.deltaTime)
+        state.Update(Gdx.graphics.deltaTime)
 
         var ui_icon : Sprite? = null
 
-        val is_currently_touching = Gdx.input.isTouched(0)
-        val current_touch_position = GetTouchPosition()
+        if(state.CanPlay())
+        {
+            val is_currently_touching = Gdx.input.isTouched(0)
+            val current_touch_position = GetTouchPosition()
 
-        if (is_currently_touching) {
-            val first_touch_position = this.first_touch_position ?: current_touch_position
-            this.first_touch_position = first_touch_position
-
-            val dir = Classify(first_touch_position, current_touch_position)
-
-            if(game.isAlive && game.isStopped)
-            {
-                val icon = SelectSpriteBasedOnDirection(dir)
-                icon.setPosition(first_touch_position.x - icon.width / 2, first_touch_position.y - icon.height / 2)
-                ui_icon = icon
-            }
-        } else {
-            // there is no touch , check for release touch
-            val first_touch_position = this.first_touch_position
-            this.first_touch_position = null
-            if (first_touch_position != null) {
-                // touch was released, act on it
+            if (is_currently_touching) {
+                val first_touch_position = this.first_touch_position ?: current_touch_position
+                this.first_touch_position = first_touch_position
 
                 val dir = Classify(first_touch_position, current_touch_position)
 
-                when (dir) {
-                    Maths.Direction.center -> game.input(Game.Input.tap)
-                    Maths.Direction.left -> game.input(Game.Input.left)
-                    Maths.Direction.right -> game.input(Game.Input.right)
-                    Maths.Direction.up -> game.input(Game.Input.up)
-                    Maths.Direction.down -> game.input(Game.Input.down)
-                    else -> {}
+                if(game.isAlive && game.isStopped)
+                {
+                    val icon = SelectSpriteBasedOnDirection(dir)
+                    icon.setPosition(first_touch_position.x - icon.width / 2, first_touch_position.y - icon.height / 2)
+                    ui_icon = icon
+                }
+            } else {
+                // there is no touch , check for release touch
+                val first_touch_position = this.first_touch_position
+                this.first_touch_position = null
+                if (first_touch_position != null) {
+                    // touch was released, act on it
+
+                    val dir = Classify(first_touch_position, current_touch_position)
+
+                    when (dir) {
+                        Maths.Direction.center -> game.input(Game.Input.tap)
+                        Maths.Direction.left -> game.input(Game.Input.left)
+                        Maths.Direction.right -> game.input(Game.Input.right)
+                        Maths.Direction.up -> game.input(Game.Input.up)
+                        Maths.Direction.down -> game.input(Game.Input.down)
+                        else -> {}
+                    }
                 }
             }
         }
