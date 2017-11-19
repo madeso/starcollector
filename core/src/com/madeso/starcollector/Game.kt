@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 
 
@@ -12,9 +13,14 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
 
     private val items = 10
 
+    val STEPTIME = 0.1f
+
     internal var itemsleft = 0
     internal var playerx: Int = 0
     internal var playery: Int = 0
+
+    internal var last_playerx: Int = 0
+    internal var last_playery: Int = 0
 
     internal var timer = 0.0f
     internal var isAlive = true
@@ -35,6 +41,9 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
 
         return Vector2(startx + step * (x - 1), starty + step * (y - 1))
     }
+
+    internal fun Inter(f: Float, t: Float, a: Float) = Interpolation.pow3In.apply(t, f, a)
+    internal fun PlayerInterpolate(f: Vector2, t: Vector2, a: Float) = Vector2(Inter(f.x, t.x, a), Inter(f.y, t.y, a))
 
     internal fun gameover() {
         isAlive = false
@@ -99,12 +108,19 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         return true
     }
 
+    private fun setuplast()
+    {
+        last_playerx = playerx
+        last_playery = playery
+    }
+
     internal fun update(dt: Float) {
         if (isAlive) {
             if (dx != 0 || dy != 0) {
                 if (timer <= 0) {
+                    setuplast()
                     if (step(dx, dy)) {
-                        timer += 0.1f
+                        timer += STEPTIME
                     } else {
                         dx = 0
                         dy = 0
@@ -224,7 +240,14 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
 
     private fun drawPlayer(batch: SpriteBatch, player: Array<Sprite>, y: Int) {
         if (y == playery) {
-            val p = transform(playerx, playery)
+            val p = if(isStopped )
+            {
+                transform(playerx, playery)
+            }
+            else
+            {
+                PlayerInterpolate(transform(last_playerx, last_playery), transform(playerx, playery), timer/STEPTIME)
+            }
             player[playerIndex].setPosition(p.x, p.y)
             player[playerIndex].draw(batch)
         }
