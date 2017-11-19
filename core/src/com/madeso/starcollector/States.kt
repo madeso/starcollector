@@ -1,6 +1,7 @@
 package com.madeso.starcollector
 
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.math.Interpolation
 
 class States(val cam : OrthographicCamera, val background : Background, val world : World)
 {
@@ -10,18 +11,20 @@ class States(val cam : OrthographicCamera, val background : Background, val worl
         ZoomDown,
         Create,
         ZoomOut,
+        WaitZoomedIn,
         ZoomToPlay,
         Play
     }
 
     // 0-1 zoom in, 1+ zoom out
-    val zoomedOut = 17f
+    val zoomedOut = 25f
     val zoomedPlay = 1f
     val zoomedClose = 0.5f
 
     // transition time for each time state
     val zoomdowntime = 0.8f
     val zoomouttime = 1f
+    val waitzoomedintime = 0.05f
     val zoomtoplaytime = 0.5f
 
     var state = State.Create
@@ -40,7 +43,7 @@ class States(val cam : OrthographicCamera, val background : Background, val worl
         when(state)
         {
             State.ZoomDown -> {
-                cam.zoom = Lerp(zoomedPlay, timer/zoomdowntime, zoomedOut)
+                cam.zoom = Interpolation.sineOut.apply(zoomedPlay, zoomedOut, timer/zoomdowntime)
                 timer += dt
                 if(timer > zoomdowntime)
                 {
@@ -54,16 +57,24 @@ class States(val cam : OrthographicCamera, val background : Background, val worl
                 game!!.CreateWorld()
             }
             State.ZoomOut -> {
-                cam.zoom = Lerp(zoomedOut, timer/zoomouttime, zoomedClose)
+                cam.zoom = Interpolation.exp10.apply(zoomedOut, zoomedClose, timer/zoomouttime)
                 timer += dt
                 if(timer > zoomouttime)
                 {
-                    state = State.ZoomToPlay
+                    state = State.WaitZoomedIn
                     background.SetRandomBackground()
                 }
             }
+            State.WaitZoomedIn -> {
+                cam.zoom = zoomedClose
+                timer += dt
+                if(timer > waitzoomedintime)
+                {
+                    state = State.ZoomToPlay
+                }
+            }
             State.ZoomToPlay -> {
-                cam.zoom = Lerp(zoomedClose, timer/zoomtoplaytime, zoomedPlay)
+                cam.zoom = Interpolation.bounceOut.apply(zoomedClose, zoomedPlay, timer/zoomtoplaytime)
                 timer += dt
                 if(timer > zoomtoplaytime)
                 {
