@@ -91,6 +91,4 @@ class States(val cam : OrthographicCamera, val background : Background, val worl
             timer = 0f
         }
     }
-
-    fun Lerp(v0:Float, t:Float, v1: Float) =  (1f - t) * v0 + t * v1;
 }
