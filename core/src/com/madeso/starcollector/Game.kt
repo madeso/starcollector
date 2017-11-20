@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 
 
-class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val size: Float, val number_of_stars : Int, val world : World, val width : Int, val height: Int, val state : States) {
+class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val size: Float, val number_of_stars : Int, val world : World<Int>, val width : Int, val height: Int, val state : States) {
 
     private val items = 10
 
@@ -207,8 +207,8 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
     private fun drawStars(batch: SpriteBatch, stars: Array<Sprite>, y: Int) {
         for (x in 0..width - 1) {
             val star_index = world.GetStarIndex(x, y)
-            if ( star_index != 0 ) {
-                val star = stars[star_index-1]
+            if ( star_index != null ) {
+                val star = stars[star_index]
                 val p2 = transform(x, y)
                 star.setPosition(p2.x, p2.y)
                 star.draw(batch)

@@ -1,26 +1,33 @@
 package com.madeso.starcollector
 
-class World(val width : Int, val height: Int)
+class World<T>(val width : Int, val height: Int)
 {
-    private var world = Array(width) { IntArray(height) }
+    class Capture<T>(val t : T)
+    {
+    }
 
-    fun IsFree(nx: Int, ny: Int) = world[nx][ny] == 0
+    private var world = Array(width) { Array<Capture<T>?>(height){null} }
 
-    fun GetStarIndex(nx: Int, ny: Int) = world[nx][ny]
+    fun IsFree(nx: Int, ny: Int) = world[nx][ny] == null
 
-    fun PlaceStar(x: Int, y: Int, star_index : Int) {
-        world[x][y] = star_index + 1
+    fun GetStarIndex(nx: Int, ny: Int) : T? {
+        val r = world[nx][ny] ?: return null
+        return r.t
+    }
+
+    fun PlaceStar(x: Int, y: Int, star_index : T) {
+        world[x][y] = Capture(star_index)
     }
 
     fun RemoveStar(x: Int, y: Int) {
-        world[x][y] = 0
+        world[x][y] = null
     }
 
     fun Clear()
     {
         for (x in 0..width - 1) {
             for (y in 0..height - 1) {
-                world[x][y] = 0
+                world[x][y] = null
             }
         }
     }

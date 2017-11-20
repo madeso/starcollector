@@ -2,7 +2,7 @@ package com.madeso.starcollector
 
 import java.util.*
 
-class WorldGenerator(val world: World, val width: Int, val height: Int, val items: Int)
+class WorldGenerator(val world: World<Int>, val width: Int, val height: Int, val items: Int)
 {
     var playerx: Int = 0
     var playery: Int = 0

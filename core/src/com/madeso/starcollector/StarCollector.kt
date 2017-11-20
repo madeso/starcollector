@@ -60,7 +60,7 @@ class StarCollector(disposer: Disposer)
 
     private val width = 20
     private val height = 20
-    val world = World(width, height)
+    val world = World<Int>(width, height)
 
     val state = States(world_camera, background, world)
 

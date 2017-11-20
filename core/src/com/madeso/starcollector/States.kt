@@ -3,7 +3,7 @@ package com.madeso.starcollector
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Interpolation
 
-class States(val cam : OrthographicCamera, val background : Background, val world : World)
+class States(val cam : OrthographicCamera, val background : Background, val world : World<Int>)
 {
     var game : Game? = null
     enum class State
