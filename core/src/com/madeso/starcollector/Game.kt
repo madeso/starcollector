@@ -33,6 +33,8 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
     private var playerIndex: Int = 0
     private var worldIndex: Int = 0
 
+    val sln = SolutionMap(width, height)
+
     internal fun transform(x: Int, y: Int): Vector2 {
         val step = size
 
@@ -185,7 +187,7 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         dx = 0
         dy = 0
 
-        val generator = WorldGenerator(world, width, height, items)
+        val generator = WorldGenerator(world, width, height, items, sln)
         generator.genworld(number_of_stars)
         playerx = generator.playerx
         playery = generator.playery
@@ -194,10 +196,11 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         worldIndex = rand.random(worldcount)
     }
 
-    fun draw(batch: SpriteBatch, world: Array<WorldTexture>, star: Array<Sprite>, player: Array<Sprite>) {
+    fun draw(batch: SpriteBatch, world: Array<WorldTexture>, paths: Array<Sprite>, star: Array<Sprite>, player: Array<Sprite>) {
         drawPlayer(batch, player, height)
         for (y in height - 1 downTo 0) {
             drawWorld(batch, world, y)
+            drawPath(batch, paths, y)
             drawStars(batch, star, y)
             drawPlayer(batch, player, y)
         }
@@ -250,6 +253,19 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
             }
             player[playerIndex].setPosition(p.x, p.y)
             player[playerIndex].draw(batch)
+        }
+    }
+
+    fun drawPath(batch: SpriteBatch, stars: Array<Sprite>, y: Int) {
+        for (x in 0..width - 1) {
+            if(sln.HasValueAt(x,y))
+            {
+                val index = sln.ValueAt(x,y)-1
+                val sp = stars[index]
+                val p2 = transform(x, y)
+                sp.setPosition(p2.x, p2.y - size * (8.0f / 16.0f))
+                sp.draw(batch)
+            }
         }
     }
 

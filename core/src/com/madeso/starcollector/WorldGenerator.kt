@@ -2,7 +2,7 @@ package com.madeso.starcollector
 
 import java.util.*
 
-class WorldGenerator(val world: World<Int>, val width: Int, val height: Int, val items: Int)
+class WorldGenerator(val world: World<Int>, val width: Int, val height: Int, val items: Int, val sln : SolutionMap)
 {
     var playerx: Int = 0
     var playery: Int = 0
@@ -32,6 +32,7 @@ class WorldGenerator(val world: World<Int>, val width: Int, val height: Int, val
 
     private fun dogenworld(number_of_stars: Int): Boolean {
         solution.clear()
+        sln.Clear()
 
         playerx = rand.random(width)
         playery = rand.random(height)
@@ -135,6 +136,7 @@ class WorldGenerator(val world: World<Int>, val width: Int, val height: Int, val
 
             // for solution traversing
             solution.add(Vec2i(x, y))
+            sln.AddTilePath(x, y, dx, dy)
 
             x = x + dx
             y = y + dy

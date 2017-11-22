@@ -41,6 +41,11 @@ class StarCollector(disposer: Disposer)
         disposer.CreateSpriteRatio(disposer.CreateTexture("player/" + Integer.toString(it + 1) + ".png"), SIZE)
     }
 
+    val pathSprites = Array(15)
+    {
+        disposer.CreateSpriteRatio(disposer.CreateTexture("path/" + Integer.toString(it + 1) + ".png"), SIZE)
+    }
+
     val allSprite = disposer.CreateSprite(disposer.CreateTexture("input/all.png"), BUTTONSIZE * 2)
     val leftSprite = disposer.CreateSprite(disposer.CreateTexture("input/left.png"), BUTTONSIZE)
     val upSprite = disposer.CreateSprite(disposer.CreateTexture("input/up.png"), BUTTONSIZE)
@@ -180,7 +185,7 @@ class StarCollector(disposer: Disposer)
         world_display.apply()
         batch.projectionMatrix = world_camera.combined
         batch.begin()
-        game.draw(batch, worldSprite, starSprite, playerSprite)
+        game.draw(batch, worldSprite, pathSprites, starSprite, playerSprite)
         batch.end()
 
         if(ui_icon != null)
