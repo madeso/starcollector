@@ -213,7 +213,7 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
             if ( star_index != null ) {
                 val star = stars[star_index]
                 val p2 = transform(x, y)
-                star.setPosition(p2.x, p2.y)
+                star.setPosition(p2.x, p2.y - size * (8.0f / 16.0f)  + size*starydisp )
                 star.draw(batch)
             }
         }
@@ -256,6 +256,9 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
         }
     }
 
+    val pathydisp = 0.15f
+    val starydisp = 0.15f
+
     fun drawPath(batch: SpriteBatch, stars: Array<Sprite>, y: Int) {
         for (x in 0..width - 1) {
             if(sln.HasValueAt(x,y))
@@ -263,7 +266,7 @@ class Game(val assets: Assets, val playercount : Int, val worldcount: Int, val s
                 val index = sln.ValueAt(x,y)-1
                 val sp = stars[index]
                 val p2 = transform(x, y)
-                sp.setPosition(p2.x, p2.y - size * (8.0f / 16.0f))
+                sp.setPosition(p2.x, p2.y - size * (8.0f / 16.0f) + size*pathydisp)
                 sp.draw(batch)
             }
         }
